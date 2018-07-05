@@ -1,30 +1,30 @@
 var filter = require('./channel_filter.js')
 var request = require ("request");
-var cat = "http://aws.random.cat/meow.php"
+var dog = "https://random.dog/woof.json"
 
-var jsCommand = "meow";
+var jsCommand = "bark";
 
 function help_info() {
   var help = {};
   help["command"] = jsCommand;
-  help["help"] = "Get a random kirry. Usage: `!meow`"
+  help["help"] = "Get a random doggo. Usage: `!"+ jsCommand + "`"
 
   return help;
 
 }
 
-function meow(command, message) {
+function bark(command, message) {
   if(command === jsCommand && filter(message)) {
     request({
-            url: cat,
+            url: dog,
             json: true
         }, function (error, response, body) {
             console.log(body);
-            message.channel.send("<@" + message.author.id + "> meow! " + body.file);
+            message.channel.send("<@" + message.author.id + "> bark! " + body.url);
             })
   }
 
 }
 
-module.exports = meow;
+module.exports = bark;
 module.exports.help_info = help_info;

@@ -6,6 +6,7 @@ const slap = require('./slap.js');
 const fart = require('./fart.js');
 const help = require('./help.js');
 const meow = require('./meow.js');
+const bark = require('./bark.js');
 
 // This is your client. Some people call it `bot`, some people call it `self`, 
 // some might call it `cootchie`. Either way, when you see `client.something`, or `bot.something`,
@@ -29,6 +30,7 @@ client.on("ready", () => {
   help.add_command(slap.help_info());
   help.add_command(fart.help_info());
   help.add_command(meow.help_info());
+  help.add_command(bark.help_info());
 });
 
 client.on("message", async message => {
