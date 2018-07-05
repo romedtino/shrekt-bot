@@ -2,7 +2,6 @@
   "//1": "describes your app and its dependencies",
   "//2": "https://docs.npmjs.com/files/package.json",
   "//3": "updating this file will download and update your packages",
-
   "name": "famiree-discord",
   "version": "0.0.1",
   "description": "Discord famirreeee",
@@ -10,8 +9,7 @@
     "start": "node server.js"
   },
   "dependencies": {
-    "express": "^4.16.3",
-    "discord.js": "^11.3.2"
+    "express": "^4.16.3"
   },
   "engines": {
     "node": "9.x"
