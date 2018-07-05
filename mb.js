@@ -1,5 +1,4 @@
 var filter = require('./channel_filter.js');
-var redis = require('redis');
 
 var jsCommand = "mb";
 
