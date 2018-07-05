@@ -1,6 +1,6 @@
 var filter = require('./channel_filter.js')
 var request = require ("request");
-var cat = "http://random.cat/meow.php"
+var cat = "http://aws.random.cat/meow"
 
 var jsCommand = "meow";
 
@@ -13,15 +13,14 @@ function help_info() {
 
 }
 
-function meow(command, args, message) {
+function meow(command, message) {
   if(command === jsCommand && filter(message)) {
     request({
             url: cat,
             json: true
         }, function (error, response, body) {
-            console.log(body);
+            message.channel.send("<@" + message.author.id + "> meow! " + body.file);
             })
-  //  message.channel.send("<@" + message.author.id + "> farts on " + args + " with a soft soggy wet one");
   }
 
 }

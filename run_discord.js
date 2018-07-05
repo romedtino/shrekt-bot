@@ -5,6 +5,7 @@ const meeseeks = require('./meeseeks.js');
 const slap = require('./slap.js');
 const fart = require('./fart.js');
 const help = require('./help.js');
+const meow = require('./meow.js');
 
 // This is your client. Some people call it `bot`, some people call it `self`, 
 // some might call it `cootchie`. Either way, when you see `client.something`, or `bot.something`,
@@ -15,8 +16,6 @@ const client = new Discord.Client();
 const config = require("./config.js");
 // config.token contains the bot's token
 // config.prefix contains the message prefix.
-
-console.log("DELETE ME" + config.token);
 
 client.on("ready", () => {
   // This event will run if the bot starts, and logs in, successfully.
@@ -29,6 +28,7 @@ client.on("ready", () => {
   help.add_command(meeseeks.help_info());
   help.add_command(slap.help_info());
   help.add_command(fart.help_info());
+  help.add_command(meow.help_info());
 });
 
 client.on("message", async message => {
@@ -58,6 +58,7 @@ client.on("message", async message => {
   slap(command, args, message);
   fart(command, args, message);
   help(command, message); 
+  meow(command, message);
 });
 
 client.login(config.token);
