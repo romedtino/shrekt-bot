@@ -10,5 +10,5 @@ setInterval(() => {
   http.get(`http://${process.env.PROJECT_DOMAIN}.glitch.me/`);
 }, 280000);
 
-//const famiree = require('./run_discord.js');
-const famiree = require('./test.js');
+const famiree = require('./run_discord.js');
+//const famiree = require('./test.js');

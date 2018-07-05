@@ -12,7 +12,7 @@ const help = require('./help.js');
 const client = new Discord.Client();
 
 // Here we load the config.json file that contains our token and our prefix values. 
-const config = require("./config.json");
+const config = require("./config.js");
 // config.token contains the bot's token
 // config.prefix contains the message prefix.
 
