@@ -61,6 +61,7 @@ client.on("message", async message => {
   fart(command, args, message);
   help(command, message); 
   meow(command, message);
+  bark(command, message);
 });
 
 client.login(config.token);
