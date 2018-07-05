@@ -33,7 +33,7 @@ var Datastore = require('nedb'),
 function help_info() {
   var help = {};
   help["command"] = jsCommand;
-  help["help"] = "Look up or assign someone's Myer Brigg's personality type. Usage: `!" + jsCommand + " [@username][add @username]`"
+  help["help"] = "Look up or assign someone's Myer Brigg's personality type. Usage: `!" + jsCommand + "[@username][add @username][remove @username]`"
 
   return help;
 
@@ -43,14 +43,17 @@ function find(query) {
 }
 
 function insert(message, name, type) {
-  var entry = { name : type };
+  var entry = { "name" : name,
+               "type" : type };
   db.insert( entry, function(err, newDoc) {
       message.channel.send("Added personality [" + type + "] for: " + name );
   });
 }
 
 function remove(message, name) {
-  db.remove(
+  db.remove( { "name" : name }, {}, function(err, numRemoved) {
+    message.channel.send("Removed " + numRemoved + " entry");
+  });
 }
 
 function mb(command, args, message) {
