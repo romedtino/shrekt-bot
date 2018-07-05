@@ -23,6 +23,11 @@ type_images["isfp"] = "https://storage.googleapis.com/neris/public/images/types/
 type_images["estp"] = "https://storage.googleapis.com/neris/public/images/types/estp-entrepreneur.svg";
 type_images["esfp"] = "https://storage.googleapis.com/neris/public/images/types/esfp-entertainer.svg";
 
+var Datastore = require('nedb'), 
+    // Security note: the database is saved to the file `datafile` on the local filesystem. It's deliberately placed in the `.data` directory
+    // which doesn't get copied if someone remixes the project.
+    db = new Datastore({ filename: '.data/mbDatafile', autoload: true });
+
 function help_info() {
   var help = {};
   help["command"] = jsCommand;
