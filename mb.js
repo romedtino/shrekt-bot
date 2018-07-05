@@ -23,6 +23,8 @@ type_images["isfp"] = "https://storage.googleapis.com/neris/public/images/types/
 type_images["estp"] = "https://storage.googleapis.com/neris/public/images/types/estp-entrepreneur.svg";
 type_images["esfp"] = "https://storage.googleapis.com/neris/public/images/types/esfp-entertainer.svg";
 
+
+// { name, type }
 var Datastore = require('nedb'), 
     // Security note: the database is saved to the file `datafile` on the local filesystem. It's deliberately placed in the `.data` directory
     // which doesn't get copied if someone remixes the project.
@@ -37,9 +39,23 @@ function help_info() {
 
 }
 
+function find(query) {
+}
+
+function insert(message, name, type) {
+  var entry = { name : type };
+  db.insert( entry, function(err, newDoc) {
+      message.channel.send("Added personality [" + type + "] for: " + name );
+  });
+}
+
+function remove(message, name) {
+  db.remove(
+}
+
 function mb(command, args, message) {
   if(command === jsCommand && filter(message)) {
-    message.channel.send("<@" + message.author.id + "> farts on " + args + " with a soft soggy wet one");
+    //message.channel.send("<@" + message.author.id + "> farts on " + args + " with a soft soggy wet one");
   }
 
 }
