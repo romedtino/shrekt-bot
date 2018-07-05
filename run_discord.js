@@ -1,6 +1,3 @@
-var express = require('express');
-var app = express();
-
 // Load up the discord.js library
 const Discord = require("discord.js");
 
@@ -62,12 +59,3 @@ client.on("message", async message => {
 });
 
 client.login(config.token);
-
-app.get('/', function (req, res) {
-  res.send('Hello World!');
-});
-
-
-app.listen(3000, function () {
-  console.log('Example app listening on port 3000!');
-});
