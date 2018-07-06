@@ -118,8 +118,16 @@ function insert(message, name, type) {
   var entry = { "name" : name,
                "type" : type };
   
-  if(type_images[type.toLowerCase() === undefined)J) {
-                 }
+  var dashIndex = type.indexOf('-');
+      var modType = type;
+      if(dashIndex > -1) {
+        modType = modType.substring(0, dashIndex);
+      }
+  if(type_images[modType.toLowerCase()] === undefined) {
+    message.channel.send("Unrecognized type: " + type);
+    return;
+  }
+  
   db.insert( entry, function(err, newDoc) {
       if(!err) {
         message.channel.send("Added personality [" + type + "] for: " + name );
