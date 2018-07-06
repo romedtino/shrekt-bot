@@ -40,7 +40,7 @@ function help_info() {
 }
 
 
-function findByName(query) {
+function findByName(message, query) {
   db.find({ name: query }, function(err, docs) {
     var retMessage = "";
     if(!err) {
@@ -50,11 +50,12 @@ function findByName(query) {
     } else {
       retMessage += "Could not find " + query;
     }
-    return retMessage;
+    
+    message.channel.send(retMessage);
   });
 }
 
-function findByType(query) {
+function findByType(message, query) {
   db.find({ type: query }, function(err, docs) {
     var retMessage = "";
     if(!err) {
@@ -65,8 +66,24 @@ function findByType(query) {
     } else {
       retMessage += "Could not find " + query;
     }
-    return retMessage;
+    
+    message.channel.send(retMessage);
   });
+}
+
+function findAll(message) {
+// Find all documents in the collection
+db.find({}).sort({type: 1}).exec(function (err, docs) {
+  var retMessage = "";
+    if(!err) {
+      for(let elem of docs) {
+        retMessage += "\n" + elem.name + "\t" + elem.type;
+      }
+    } else {
+      retMessage += "Could not find entri;
+    }
+});
+
 }
 
 function insert(message, name, type) {
@@ -96,14 +113,16 @@ function mb(command, args, message) {
   if(command === jsCommand && filter(message)) {
     var req = args[0];
     
-    if(!req) {
-      
+    if(req) {
+      //TODO list all?
     } else if(req === "add") {
-      
+      insert(message, args[1], args[2]);
     } else if(req === "remove") {
-      
-    } else if(req === "f") {
-      
+      remove(message, args[1]);
+    } else if(args[1].indexOf('@' > -1)) {
+      findByName(message, args[1]);
+    } else {
+      findByType(message, args[1]);
     }
     
   }
