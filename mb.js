@@ -39,20 +39,41 @@ function help_info() {
 
 }
 
-function find(query) {
+
+function findByName(query) {
+  db.find({ name: query }, function(err, docs) {
+    if(!err) {
+      return docs;
+    }
+  });
+}
+
+function findByType(query) {
+  db.find({ type: query }, function(err, docs) {
+    
+  });
 }
 
 function insert(message, name, type) {
   var entry = { "name" : name,
                "type" : type };
+  
   db.insert( entry, function(err, newDoc) {
-      message.channel.send("Added personality [" + type + "] for: " + name );
+      if(!err) {
+        message.channel.send("Added personality [" + type + "] for: " + name );
+      } else {
+        message.channel.send("Failed adding personality to list")
+      }
   });
 }
 
 function remove(message, name) {
   db.remove( { "name" : name }, {}, function(err, numRemoved) {
-    message.channel.send("Removed " + numRemoved + " entry");
+    if(!err) {
+      message.channel.send("Removed " + numRemoved + " entry");
+    } else {
+      message.channel.send("Failed to remove entry");
+    }
   });
 }
 
