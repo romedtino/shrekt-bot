@@ -133,7 +133,7 @@ function insert(message, name, type) {
     return;
   }
   
-  db.insert( entry, function(err, newDoc) {
+  db.update({"name": name }, entry, { upsert: true }, function(err, newDoc) {
       if(!err) {
         message.channel.send("Added personality [" + type + "] for: " + name );
       } else {
