@@ -57,8 +57,7 @@ function findByType(message, query) {
         retMessage += "\nNo one has this personality type.";
       }
       for(let elem of docs) {
-        var padded = elem.name.padEnd(15, "-");
-        retMessage += "\n**" + padded + "**\t" + elem.type_string.toUpperCase();
+        retMessage += "\n**" + elem.name.padEnd(15) + "**" + elem.type_string.toUpperCase();
       }
       message.channel.send(retMessage);
     } 
@@ -93,7 +92,7 @@ db.find({}).sort({name: 1}).exec(function (err, docs) {
         retMessage += "\nNo entries found.";
       }
       for(let elem of docs) {
-        retMessage += "\n**" + elem.name.padEnd(15) + "**:" + elem.type_string.toUpperCase();
+        retMessage += "\n**" + elem.name.padEnd(15, " -") + "** " + elem.type_string.toUpperCase();
       }
     } else {
       retMessage += "Could not find entries";
