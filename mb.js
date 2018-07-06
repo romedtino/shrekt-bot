@@ -57,7 +57,8 @@ function findByType(message, query) {
         retMessage += "\nNo one has this personality type.";
       }
       for(let elem of docs) {
-        retMessage += "\n-**" + elem.name + "**-\t" + elem.type_string.toUpperCase();
+        var padded = elem.name.padEnd(15, "-");
+        retMessage += "\n**" + padded + "**\t" + elem.type_string.toUpperCase();
       }
       message.channel.send(retMessage);
     } 
