@@ -41,6 +41,7 @@ function help_info() {
 
 
 function findByName(message, query) {
+  console.log("findByName");
   db.find({ name: query }, function(err, docs) {
     var retMessage = "";
     if(!err) {
@@ -56,6 +57,7 @@ function findByName(message, query) {
 }
 
 function findByType(message, query) {
+  console.log("findByType");
   db.find({ type: query }, function(err, docs) {
     var retMessage = "";
     if(!err) {
@@ -72,9 +74,10 @@ function findByType(message, query) {
 }
 
 function findAll(message) {
+  console.log("findAll");
 // Find all documents in the collection
 db.find({}).sort({type: 1}).exec(function (err, docs) {
-  var retMessage = "";
+  var retMessage = "Listing all entries.";
     if(!err) {
       for(let elem of docs) {
         retMessage += "\n" + elem.name + "\t" + elem.type;
@@ -82,15 +85,16 @@ db.find({}).sort({type: 1}).exec(function (err, docs) {
     } else {
       retMessage += "Could not find entries";
     }
+  console.log("Sending: " + retMessage);
   message.channel.send(retMessage);
  });
-
+ console.log("derp");
 }
 
 function insert(message, name, type) {
+  console.log("insert");
   var entry = { "name" : name,
                "type" : type };
-  
   db.insert( entry, function(err, newDoc) {
       if(!err) {
         message.channel.send("Added personality [" + type + "] for: " + name );
@@ -101,6 +105,7 @@ function insert(message, name, type) {
 }
 
 function remove(message, name) {
+  console.log("remove");
   db.remove( { "name" : name }, {}, function(err, numRemoved) {
     if(!err) {
       message.channel.send("Removed " + numRemoved + " entry");
