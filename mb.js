@@ -3,25 +3,25 @@ var filter = require('./channel_filter.js');
 var jsCommand = "mb";
 
 var type_images = {};
-type_images["intj"] = "https://storage.googleapis.com/neris/public/images/types/intj-architect.svg";
-type_images["intp"] = "https://storage.googleapis.com/neris/public/images/types/intp-logician.svg";
-type_images["entj"] = "https://storage.googleapis.com/neris/public/images/types/entj-commander.svg";
-type_images["entp"] = "https://storage.googleapis.com/neris/public/images/types/entp-debater.svg";
+type_images["intj"] = "http://www.personalityperfect.com/wp-content/uploads/2015/09/mastermind-intj.png";
+type_images["intp"] = "http://www.personalityperfect.com/wp-content/uploads/2015/09/thinker-intp.png";
+type_images["entj"] = "http://www.personalityperfect.com/wp-content/uploads/2015/09/commander-entj.png";
+type_images["entp"] = "http://www.personalityperfect.com/wp-content/uploads/2015/09/visionary-entp.png";
 
-type_images["infj"] = "https://storage.googleapis.com/neris/public/images/types/infj-advocate.svg";
-type_images["infp"] = "https://storage.googleapis.com/neris/public/images/types/infp-mediator.svg";
-type_images["enfj"] = "https://storage.googleapis.com/neris/public/images/types/enfj-protagonist.svg";
-type_images["enfp"] = "https://storage.googleapis.com/neris/public/images/types/enfp-campaigner.svg";
+type_images["infj"] = "http://www.personalityperfect.com/wp-content/uploads/2015/09/counselor-infj.png";
+type_images["infp"] = "http://www.personalityperfect.com/wp-content/uploads/2015/09/idealist-infp.png";
+type_images["enfj"] = "http://www.personalityperfect.com/wp-content/uploads/2015/09/giver-enfj.png";
+type_images["enfp"] = "http://www.personalityperfect.com/wp-content/uploads/2015/09/champion-enfp.png";
 
-type_images["istj"] = "https://storage.googleapis.com/neris/public/images/types/istj-logistician.svg";
-type_images["isfj"] = "https://storage.googleapis.com/neris/public/images/types/isfj-defender.svg";
-type_images["estj"] = "https://storage.googleapis.com/neris/public/images/types/estj-executive.svg";
-type_images["esfj"] = "https://storage.googleapis.com/neris/public/images/types/esfj-consul.svg";
+type_images["istj"] = "http://www.personalityperfect.com/wp-content/uploads/2015/09/inspector-istj.png";
+type_images["isfj"] = "http://www.personalityperfect.com/wp-content/uploads/2015/09/nurturer-isfj.png";
+type_images["estj"] = "http://www.personalityperfect.com/wp-content/uploads/2015/09/supervisor-estj.png";
+type_images["esfj"] = "http://www.personalityperfect.com/wp-content/uploads/2015/09/provider-esfj.png";
 
-type_images["istp"] = "https://storage.googleapis.com/neris/public/images/types/istp-virtuoso.svg";
-type_images["isfp"] = "https://storage.googleapis.com/neris/public/images/types/isfp-adventurer.svg";
-type_images["estp"] = "https://storage.googleapis.com/neris/public/images/types/estp-entrepreneur.svg";
-type_images["esfp"] = "https://storage.googleapis.com/neris/public/images/types/esfp-entertainer.svg";
+type_images["istp"] = "http://www.personalityperfect.com/wp-content/uploads/2015/09/craftsman-istp.png";
+type_images["isfp"] = "http://www.personalityperfect.com/wp-content/uploads/2015/10/isfp-the-composer-avatar.jpg";
+type_images["estp"] = "http://www.personalityperfect.com/wp-content/uploads/2015/09/doer-estp.png";
+type_images["esfp"] = "http://www.personalityperfect.com/wp-content/uploads/2015/09/performer-esfp.png";
 
 
 // { name, type }
@@ -51,10 +51,12 @@ function findByName(message, query) {
       for(let elem of docs) {
           var dashIndex = elem.type.indexOf('-');
           var modType = elem.type;
+        console.log("bef modType: " + modType);
           if(dashIndex > -1) {
             modType = modType.substring(0, dashIndex);
           }
-        retMessage += elem.name + " is a " + type_images[modType];
+        console.log("modType: " + modType);
+        retMessage += elem.name + " is a " + type_images[modType.toLowerCase()];
       }
     } else {
       retMessage += "Could not find " + query;
@@ -75,13 +77,13 @@ function findByType(message, query) {
         modType = modType.substring(0, dashIndex);
       }
       
-      retMessage += "People with personality type: " + query.toUpperCase() + " " + type_images[modType];
+      retMessage += "People with personality type: " + query.toUpperCase() + " " + type_images[modType.toLowerCase()];
       
       if(docs.length <= 0) {
         retMessage += "\nNo one has this personality type.";
       }
       for(let elem of docs) {
-        retMessage += "\n- " + elem.name + "-\t" + elem.type;
+        retMessage += "\n- " + elem.name + "-\t" + elem.type.toUpperCase();
       }
     } else {
       retMessage += "Could not find " + query;
@@ -101,7 +103,7 @@ db.find({}).sort({type: 1}).exec(function (err, docs) {
         retMessage += "\nNo entries found.";
       }
       for(let elem of docs) {
-        retMessage += "\n" + elem.name + "\t" + elem.type;
+        retMessage += "\n" + elem.name + "\t" + elem.type.toUpperCase();
       }
     } else {
       retMessage += "Could not find entries";
@@ -115,6 +117,9 @@ function insert(message, name, type) {
 
   var entry = { "name" : name,
                "type" : type };
+  
+  if(type_images[type.toLowerCase() === undefined)J) {
+                 }
   db.insert( entry, function(err, newDoc) {
       if(!err) {
         message.channel.send("Added personality [" + type + "] for: " + name );
