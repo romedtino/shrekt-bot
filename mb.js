@@ -43,10 +43,10 @@ function help_info() {
 function findByName(message, query) {
   console.log("findByName");
   db.find({ name: query }, function(err, docs) {
-    var retMessage = query + " returned: ";
+    var retMessage = "";
     if(!err) {
       if(docs.length <= 0) {
-        retMessage += "no entries.";
+        retMessage += "No entry for " + query;
       }
       for(let elem of docs) {
           var dashIndex = elem.type.indexOf('-');
@@ -67,14 +67,19 @@ function findByName(message, query) {
 function findByType(message, query) {
   console.log("findByType");
   db.find({ type: query }, function(err, docs) {
-    var retMessage = query + " returned: ";
+    var retMessage = "";
     if(!err) {
       var dashIndex = query.indexOf('-');
       var modType = query;
       if(dashIndex > -1) {
         modType = modType.substring(0, dashIndex);
       }
+      
       retMessage += "People with personality type: " + query.toUpperCase() + " " + type_images[modType];
+      
+      if(docs.length <= 0) {
+        retMessage += "\nNo one has this personality type.";
+      }
       for(let elem of docs) {
         retMessage += "\n- " + elem.name + "-\t" + elem.type;
       }
@@ -90,10 +95,10 @@ function findAll(message) {
   console.log("findAll");
 // Find all documents in the collection
 db.find({}).sort({type: 1}).exec(function (err, docs) {
-  var retMessage = "Listing all entries.";
+  var retMessage = "";
     if(!err) {
       if(docs.length <= 0) {
-        retMessage += "No entries found.";
+        retMessage += "\nNo entries found.";
       }
       for(let elem of docs) {
         retMessage += "\n" + elem.name + "\t" + elem.type;
@@ -101,10 +106,8 @@ db.find({}).sort({type: 1}).exec(function (err, docs) {
     } else {
       retMessage += "Could not find entries";
     }
-  console.log("Sending: " + retMessage);
   message.channel.send(retMessage);
  });
- console.log("derp");
 }
 
 function insert(message, name, type) {
@@ -123,6 +126,7 @@ function insert(message, name, type) {
 
 function remove(message, name) {
   console.log("remove");
+  
   db.remove( { "name" : name }, {}, function(err, numRemoved) {
     if(!err) {
       message.channel.send("Removed " + numRemoved + " entry");
@@ -139,14 +143,24 @@ function mb(command, args, message) {
     if(req === undefined) {
       findAll(message);
     } else if(req === "add") {
-      var lowered = args[1].toLowerCase();
-      insert(message, lowered, args[2]);
+      if(args[1] === undefined || args[2] === undefined) 
+      {
+        message.channel.send("Invalid add.");
+      } else {
+        var lowered = args[1].toLowerCase();
+        insert(message, lowered, args[2]);
+      }
     } else if(req === "remove") {
-      remove(message, args[1]);
-    } else if(args[1].indexOf('@' > -1)) {
-      findByName(message, args[1]);
+      if(args[1] === undefined)
+      {
+        message.channel.send("Invalid remove.");
+      } else {
+        remove(message, args[1]);
+      }
+    } else if(req.indexOf('@') > -1) {
+      findByName(message, args[0]);
     } else {
-      findByType(message, args[1]);
+      findByType(message, args[0]);
     }
     
   }
