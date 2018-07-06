@@ -47,7 +47,7 @@ function findByType(message, query) {
     modType = modType.substring(0, dashIndex);
   }
   
-  db.find({ type: modType.toLowerCase() }, function(err, docs) {
+  db.find({ type: { $gte: modType.toLowerCase() }}, function(err, docs) {
     var retMessage = "";
     if(!err) {
       
