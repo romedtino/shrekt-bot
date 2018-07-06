@@ -33,7 +33,7 @@ var Datastore = require('nedb'),
 function help_info() {
   var help = {};
   help["command"] = jsCommand;
-  help["help"] = "Look up or assign someone's Myer Brigg's personality type. Usage: `!mb [@username][add @username type][remove @username]`\n e.g. `!mb add @darkamikaze intj"
+  help["help"] = "Look up or assign someone's Myer Brigg's personality type. Usage: `!mb [name][add name type][remove name]`\n e.g. `!mb add Jerome intj"
 
   return help;
 
@@ -41,14 +41,15 @@ function help_info() {
 
 function findByType(message, query) {
   console.log("findByType");
-  db.find({ type: query }, function(err, docs) {
+  var dashIndex = query.indexOf('-');
+  var modType = query;
+  if(dashIndex > -1) {
+    modType = modType.substring(0, dashIndex);
+  }
+  
+  db.find({ type: modType.toLowerCase() }, function(err, docs) {
     var retMessage = "";
     if(!err) {
-      var dashIndex = query.indexOf('-');
-      var modType = query;
-      if(dashIndex > -1) {
-        modType = modType.substring(0, dashIndex);
-      }
       
       retMessage += "People with personality type: " + query.toUpperCase() + " " + type_images[modType.toLowerCase()];
       
@@ -111,18 +112,19 @@ function insert(message, name, type) {
   console.log("insert " + name);
 
   var entry = { "name" : name,
-               "type" : type };
+               "type" : type.toLowerCase() };
   
-  if(name.indexOf("@") < 0) {
-    message.channel.send("Please use @name to assign a name");
-    return;
-  }
-  
-  var dashIndex = type.indexOf('-');
+   var dashIndex = type.indexOf('-');
   var modType = type;
   if(dashIndex > -1) {
         modType = modType.substring(0, dashIndex);
       }
+  
+  if(type_images[name.toLowerCase()] !== undefined) {
+    message.channel.send("What were you really trying to do...");
+    return;
+  }
+  
   if(type_images[modType.toLowerCase()] === undefined) {
     message.channel.send("Unrecognized type: " + type);
     return;
@@ -149,15 +151,19 @@ function remove(message, name) {
   });
 }
 
+function deleteDB()
+{
+  // Removing all documents with the 'match-all' query
+  db.remove({}, { multi: true }, function (err, numRemoved) {
+  });
+}
+
 function mb(command, args, message) {
   if(command === jsCommand && filter(message)) {
     var req = args[0];
     console.log(req);
     if(req === undefined) {
-    //  findAll(message);
-      // Removing all documents with the 'match-all' query
-db.remove({}, { multi: true }, function (err, numRemoved) {
-});
+      findAll(message);
     } else if(req === "add") {
       if(args[1] === undefined || args[2] === undefined) 
       {
@@ -173,9 +179,8 @@ db.remove({}, { multi: true }, function (err, numRemoved) {
       } else {
         remove(message, args[1]);
       }
-    } else 
+    } else {
       findByName(message, args[0]);
-    // findByType(message, args[0]);
     }
     
   }
