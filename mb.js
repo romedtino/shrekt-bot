@@ -51,7 +51,7 @@ function findByType(message, query) {
     var retMessage = "";
     if(!err) {
       
-      retMessage += "People with personality type: " + query.toUpperCase() + " **" + type_images[modType.toLowerCase()] + "**";
+      retMessage += "People with personality type: " + query.toUpperCase() + " " + type_images[modType.toLowerCase()];
       
       if(docs.length <= 0) {
         retMessage += "\nNo one has this personality type.";
@@ -75,7 +75,7 @@ function findByName(message, query) {
         return;
       }
       for(let elem of docs) {
-        retMessage += elem.name + " is a **" + elem.type_string + "** " + type_images[elem.type.toLowerCase()];
+        retMessage += elem.name + " is a **[" + elem.type_string.toUpperCase() + "]** " + type_images[elem.type.toLowerCase()];
       }
       message.channel.send(retMessage);
     }
@@ -85,14 +85,14 @@ function findByName(message, query) {
 function findAll(message) {
   console.log("findAll");
 // Find all documents in the collection
-db.find({}).sort({type: 1}).exec(function (err, docs) {
+db.find({}).sort({name: 1}).exec(function (err, docs) {
   var retMessage = "";
     if(!err) {
       if(docs.length <= 0) {
         retMessage += "\nNo entries found.";
       }
       for(let elem of docs) {
-        retMessage += "\n**" + elem.name + "**: \t" + elem.type_string.toUpperCase();
+        retMessage += "\n**" + elem.name.padEnd(15) + "**:" + elem.type_string.toUpperCase();
       }
     } else {
       retMessage += "Could not find entries";
