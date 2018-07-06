@@ -80,9 +80,10 @@ db.find({}).sort({type: 1}).exec(function (err, docs) {
         retMessage += "\n" + elem.name + "\t" + elem.type;
       }
     } else {
-      retMessage += "Could not find entri;
+      retMessage += "Could not find entries";
     }
-});
+  message.channel.send(retMessage);
+ });
 
 }
 
@@ -112,11 +113,12 @@ function remove(message, name) {
 function mb(command, args, message) {
   if(command === jsCommand && filter(message)) {
     var req = args[0];
-    
-    if(req) {
-      //TODO list all?
+    console.log(req);
+    if(req === undefined) {
+      findAll(message);
     } else if(req === "add") {
-      insert(message, args[1], args[2]);
+      var lowered = args[1].toLowerCase();
+      insert(message, lowered, args[2]);
     } else if(req === "remove") {
       remove(message, args[1]);
     } else if(args[1].indexOf('@' > -1)) {
