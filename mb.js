@@ -39,33 +39,6 @@ function help_info() {
 
 }
 
-
-function findByName(message, query) {
-  console.log("findByName");
-  db.find({ name: query }, function(err, docs) {
-    var retMessage = "";
-    if(!err) {
-      if(docs.length <= 0) {
-        retMessage += "No entry for " + query;
-      }
-      for(let elem of docs) {
-          var dashIndex = elem.type.indexOf('-');
-          var modType = elem.type;
-        console.log("bef modType: " + modType);
-          if(dashIndex > -1) {
-            modType = modType.substring(0, dashIndex);
-          }
-        console.log("modType: " + modType);
-        retMessage += elem.name + " is a " + type_images[modType.toLowerCase()];
-      }
-    } else {
-      retMessage += "Could not find " + query;
-    }
-    
-    message.channel.send(retMessage);
-  });
-}
-
 function findByType(message, query) {
   console.log("findByType");
   db.find({ type: query }, function(err, docs) {
@@ -85,11 +58,33 @@ function findByType(message, query) {
       for(let elem of docs) {
         retMessage += "\n- " + elem.name + "-\t" + elem.type.toUpperCase();
       }
-    } else {
-      retMessage += "Could not find " + query;
-    }
+      message.channel.send(retMessage);
+    } 
     
-    message.channel.send(retMessage);
+  });
+}
+
+function findByName(message, query) {
+  console.log("findByName");
+  db.find({ name: query }, function(err, docs) {
+    var retMessage = "";
+    if(!err) {
+      if(docs.length <= 0) {
+        findByType(message, query);
+        return;
+      }
+      for(let elem of docs) {
+          var dashIndex = elem.type.indexOf('-');
+          var modType = elem.type;
+        console.log("bef modType: " + modType);
+          if(dashIndex > -1) {
+            modType = modType.substring(0, dashIndex);
+          }
+        console.log("modType: " + modType);
+        retMessage += elem.name + " is a " + type_images[modType.toLowerCase()];
+      }
+      message.channel.send(retMessage);
+    }
   });
 }
 
@@ -113,7 +108,7 @@ db.find({}).sort({type: 1}).exec(function (err, docs) {
 }
 
 function insert(message, name, type) {
-  console.log("insert");
+  console.log("insert " + name);
 
   var entry = { "name" : name,
                "type" : type };
@@ -159,7 +154,10 @@ function mb(command, args, message) {
     var req = args[0];
     console.log(req);
     if(req === undefined) {
-      findAll(message);
+    //  findAll(message);
+      // Removing all documents with the 'match-all' query
+db.remove({}, { multi: true }, function (err, numRemoved) {
+});
     } else if(req === "add") {
       if(args[1] === undefined || args[2] === undefined) 
       {
@@ -175,10 +173,9 @@ function mb(command, args, message) {
       } else {
         remove(message, args[1]);
       }
-    } else if(req.indexOf('@') > -1) {
+    } else 
       findByName(message, args[0]);
-    } else {
-      findByType(message, args[0]);
+    // findByType(message, args[0]);
     }
     
   }
