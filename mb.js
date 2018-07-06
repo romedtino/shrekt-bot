@@ -33,7 +33,7 @@ var Datastore = require('nedb'),
 function help_info() {
   var help = {};
   help["command"] = jsCommand;
-  help["help"] = "Look up or assign someone's Myer Brigg's personality type. Usage: `!" + jsCommand + "[@username][add @username][remove @username]`"
+  help["help"] = "Look up or assign someone's Myer Brigg's personality type. Usage: `!mb [@username][add @username type][remove @username]`\n e.g. `!mb add @darkamikaze intj"
 
   return help;
 
@@ -42,15 +42,30 @@ function help_info() {
 
 function findByName(query) {
   db.find({ name: query }, function(err, docs) {
+    var retMessage = "";
     if(!err) {
-      return docs;
+      for(let elem of docs) {
+        retMessage += elem.name + " is a " + type_images[elem.type];
+      }
+    } else {
+      retMessage += "Could not find " + query;
     }
+    return retMessage;
   });
 }
 
 function findByType(query) {
   db.find({ type: query }, function(err, docs) {
-    
+    var retMessage = "";
+    if(!err) {
+      retMessage += "People with personality type: " + query.toUpperCase() + " " + type_images[query];
+      for(let elem of docs) {
+        retMessage += "\n- " + elem.name;
+      }
+    } else {
+      retMessage += "Could not find " + query;
+    }
+    return retMessage;
   });
 }
 
@@ -79,7 +94,18 @@ function remove(message, name) {
 
 function mb(command, args, message) {
   if(command === jsCommand && filter(message)) {
-    //message.channel.send("<@" + message.author.id + "> farts on " + args + " with a soft soggy wet one");
+    var req = args[0];
+    
+    if(!req) {
+      
+    } else if(req === "add") {
+      
+    } else if(req === "remove") {
+      
+    } else if(req === "f") {
+      
+    }
+    
   }
 
 }
