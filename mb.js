@@ -43,10 +43,18 @@ function help_info() {
 function findByName(message, query) {
   console.log("findByName");
   db.find({ name: query }, function(err, docs) {
-    var retMessage = "";
+    var retMessage = query + " returned: ";
     if(!err) {
+      if(docs.length <= 0) {
+        retMessage += "no entries.";
+      }
       for(let elem of docs) {
-        retMessage += elem.name + " is a " + type_images[elem.type];
+          var dashIndex = elem.type.indexOf('-');
+          var modType = elem.type;
+          if(dashIndex > -1) {
+            modType = modType.substring(0, dashIndex);
+          }
+        retMessage += elem.name + " is a " + type_images[modType];
       }
     } else {
       retMessage += "Could not find " + query;
@@ -59,11 +67,16 @@ function findByName(message, query) {
 function findByType(message, query) {
   console.log("findByType");
   db.find({ type: query }, function(err, docs) {
-    var retMessage = "";
+    var retMessage = query + " returned: ";
     if(!err) {
-      retMessage += "People with personality type: " + query.toUpperCase() + " " + type_images[query];
+      var dashIndex = query.indexOf('-');
+      var modType = query;
+      if(dashIndex > -1) {
+        modType = modType.substring(0, dashIndex);
+      }
+      retMessage += "People with personality type: " + query.toUpperCase() + " " + type_images[modType];
       for(let elem of docs) {
-        retMessage += "\n- " + elem.name;
+        retMessage += "\n- " + elem.name + "-\t" + elem.type;
       }
     } else {
       retMessage += "Could not find " + query;
@@ -79,6 +92,9 @@ function findAll(message) {
 db.find({}).sort({type: 1}).exec(function (err, docs) {
   var retMessage = "Listing all entries.";
     if(!err) {
+      if(docs.length <= 0) {
+        retMessage += "No entries found.";
+      }
       for(let elem of docs) {
         retMessage += "\n" + elem.name + "\t" + elem.type;
       }
@@ -93,6 +109,7 @@ db.find({}).sort({type: 1}).exec(function (err, docs) {
 
 function insert(message, name, type) {
   console.log("insert");
+
   var entry = { "name" : name,
                "type" : type };
   db.insert( entry, function(err, newDoc) {
