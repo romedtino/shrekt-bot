@@ -47,17 +47,17 @@ function findByType(message, query) {
     modType = modType.substring(0, dashIndex);
   }
   
-  db.find({ type: { $gte: modType.toLowerCase() }}, function(err, docs) {
+  db.find({ type: modType.toLowerCase() }, function(err, docs) {
     var retMessage = "";
     if(!err) {
       
-      retMessage += "People with personality type: " + query.toUpperCase() + " " + type_images[modType.toLowerCase()];
+      retMessage += "People with personality type: " + query.toUpperCase() + " **" + type_images[modType.toLowerCase()] + "**";
       
       if(docs.length <= 0) {
         retMessage += "\nNo one has this personality type.";
       }
       for(let elem of docs) {
-        retMessage += "\n- " + elem.name + "-\t" + elem.type.toUpperCase();
+        retMessage += "\n-**" + elem.name + "**-\t" + elem.type_string.toUpperCase();
       }
       message.channel.send(retMessage);
     } 
@@ -75,14 +75,7 @@ function findByName(message, query) {
         return;
       }
       for(let elem of docs) {
-          var dashIndex = elem.type.indexOf('-');
-          var modType = elem.type;
-        console.log("bef modType: " + modType);
-          if(dashIndex > -1) {
-            modType = modType.substring(0, dashIndex);
-          }
-        console.log("modType: " + modType);
-        retMessage += elem.name + " is a " + type_images[modType.toLowerCase()];
+        retMessage += elem.name + " is a **" + elem.type_string + "** " + type_images[elem.type.toLowerCase()];
       }
       message.channel.send(retMessage);
     }
@@ -99,7 +92,7 @@ db.find({}).sort({type: 1}).exec(function (err, docs) {
         retMessage += "\nNo entries found.";
       }
       for(let elem of docs) {
-        retMessage += "\n" + elem.name + " \t" + elem.type.toUpperCase();
+        retMessage += "\n**" + elem.name + "**: \t" + elem.type_string.toUpperCase();
       }
     } else {
       retMessage += "Could not find entries";
@@ -111,15 +104,16 @@ db.find({}).sort({type: 1}).exec(function (err, docs) {
 function insert(message, name, type) {
   console.log("insert " + name);
 
-  var entry = { "name" : name,
-               "type" : type.toLowerCase() };
-  
-   var dashIndex = type.indexOf('-');
+  var dashIndex = type.indexOf('-');
   var modType = type;
   if(dashIndex > -1) {
-        modType = modType.substring(0, dashIndex);
-      }
+    modType = modType.substring(0, dashIndex);
+  }
   
+  var entry = { "name" : name,
+               "type" : modType.toLowerCase(),
+               "type_string" : type.toLowerCase() };
+    
   if(type_images[name.toLowerCase()] !== undefined) {
     message.channel.send("What were you really trying to do...");
     return;
@@ -132,7 +126,7 @@ function insert(message, name, type) {
   
   db.update({"name": name }, entry, { upsert: true }, function(err, newDoc) {
       if(!err) {
-        message.channel.send("Added personality [" + type + "] for: " + name );
+        message.channel.send("Added personality [" + type.toUpperCase() + "] for: " + name );
       } else {
         message.channel.send("Failed adding personality to list")
       }
@@ -169,8 +163,7 @@ function mb(command, args, message) {
       {
         message.channel.send("Invalid add.");
       } else {
-        var lowered = args[1].toLowerCase();
-        insert(message, lowered, args[2]);
+        insert(message, args[1], args[2]);
       }
     } else if(req === "remove") {
       if(args[1] === undefined)
