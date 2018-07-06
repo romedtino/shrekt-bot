@@ -103,7 +103,7 @@ db.find({}).sort({type: 1}).exec(function (err, docs) {
         retMessage += "\nNo entries found.";
       }
       for(let elem of docs) {
-        retMessage += "\n" + elem.name + "\t" + elem.type.toUpperCase();
+        retMessage += "\n" + elem.name + " \t" + elem.type.toUpperCase();
       }
     } else {
       retMessage += "Could not find entries";
@@ -118,9 +118,14 @@ function insert(message, name, type) {
   var entry = { "name" : name,
                "type" : type };
   
+  if(name.indexOf("@") < 0) {
+    message.channel.send("Please use @name to assign a name");
+    return;
+  }
+  
   var dashIndex = type.indexOf('-');
-      var modType = type;
-      if(dashIndex > -1) {
+  var modType = type;
+  if(dashIndex > -1) {
         modType = modType.substring(0, dashIndex);
       }
   if(type_images[modType.toLowerCase()] === undefined) {
