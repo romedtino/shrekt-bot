@@ -32,7 +32,7 @@ client.on("ready", () => {
   help.add_command(fart.help_info());
   help.add_command(meow.help_info());
   help.add_command(bark.help_info());
- // help.add_command(mb.help_info());
+  help.add_command(mb.help_info());
 });
 
 client.on("message", async message => {
