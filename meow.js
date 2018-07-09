@@ -19,8 +19,13 @@ function meow(command, message) {
             url: cat,
             json: true
         }, function (error, response, body) {
-            console.log(body);
-            message.channel.send("<@" + message.author.id + "> meow! " + body.file);
+            if(body === undefined )
+            {
+              message.channel.send("<@" + message.author.id +"> Sorry the meow API is overloaded... try again later.");
+            }
+            else {
+              message.channel.send("<@" + message.author.id + "> meow! " + body.file);
+            }
             })
   }
 
