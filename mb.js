@@ -33,7 +33,7 @@ var Datastore = require('nedb'),
 function help_info() {
   var help = {};
   help["command"] = jsCommand;
-  help["help"] = "Look up or assign someone's Myer Brigg's personality type. \nUsage: `!mb [name][add name type][remove name]`\n e.g. `!mb add Jerome intj"
+  help["help"] = "Look up or assign someone's Myer Brigg's personality type. \nUsage: `!mb [name][add name type][remove name][sheet]`\n e.g. `!mb add Jerome intj"
 
   return help;
 
@@ -172,7 +172,11 @@ function mb(command, args, message) {
       } else {
         remove(message, args[1]);
       }
-    } else {
+    } else if(req === "sheet")
+    { 
+      message.channel.send("https://docs.google.com/spreadsheets/d/1tn5xlhP9RnuVM4KIm92BUAQreSB-AxdHZVNSsUSxRrg/edit?usp=drivesdk");
+    }
+    else {
       findByName(message, args[0]);
     }
     
