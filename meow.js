@@ -19,7 +19,7 @@ function meow(command, message) {
             url: cat,
             json: true
         }, function (error, response, body) {
-            if(body === undefined )
+            if(body.file === undefined )
             {
               message.channel.send("<@" + message.author.id +"> Sorry the meow API is overloaded... try again later.");
             }

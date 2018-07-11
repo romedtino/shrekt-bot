@@ -1,4 +1,4 @@
-var whitelist = ["leet-speak",
+var whitelist = ["1337-speak",
                  "cousins-trip",
                  "secret-santa-2018",
                  "sports",
