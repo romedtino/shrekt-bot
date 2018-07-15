@@ -152,7 +152,7 @@ function deleteDB()
   });
 }
 
-function mb(command, args, message) {
+function execute(command, args, message) {
   if(command === jsCommand && filter(message)) {
     var req = args[0];
     console.log(req);
@@ -184,5 +184,5 @@ function mb(command, args, message) {
 
 }
 
-module.exports = mb;
+module.exports.execute = execute;
 module.exports.help_info = help_info;
