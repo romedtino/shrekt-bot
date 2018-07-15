@@ -33,7 +33,7 @@ var Datastore = require('nedb'),
 function help_info() {
   var help = {};
   help["command"] = jsCommand;
-  help["help"] = "Look up or assign someone's Myer Brigg's personality type. \nUsage: `!mb [name][add name type][remove name][sheet]`\n e.g. `!mb add Jerome intj"
+  help["help"] = "Look up or assign someone's Myer Brigg's personality type. \nUsage: `!mb [name][add name type][remove name][sheet]`\n e.g. `!mb add Jerome intj`"
 
   return help;
 
