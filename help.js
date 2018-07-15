@@ -1,6 +1,15 @@
 
 var command_list = {};
 
+function help_info() {
+  var help = {};
+  help["command"] = "help";
+  help["help"] = "This help: Usage `help`."
+
+  return help;
+
+}
+
 function add_command(help) {
   command_list[help.command] = help.help; 
 
@@ -21,3 +30,4 @@ function execute(command, args, message) {
 
 module.exports.execute = execute;
 module.exports.add_command = add_command;
+module.exports.help_info = help_info;
