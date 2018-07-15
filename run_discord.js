@@ -11,6 +11,9 @@ commandList.push(require('./bark.js'));
 commandList.push(require('./mb.js'));
 
 const help = require('./help.js');
+commandList.push(help);
+
+
 
 // This is your client. Some people call it `bot`, some people call it `self`, 
 // some might call it `cootchie`. Either way, when you see `client.something`, or `bot.something`,
