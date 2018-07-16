@@ -34,8 +34,8 @@ function help_info() {
   var help = {};
   help["command"] = jsCommand;
   help["help"] = "Look up or assign someone's Myer Brigg's personality type. \n";
-  help["help"] += "      Usage: `!mb [name][add name type][remove name][sheet]`\n";
-  help["help"] += "      e.g. `!mb add Jerome intj`"
+  help["help"] += "    Usage: `!mb [name][add name type][remove name][sheet]`\n";
+  help["help"] += "    e.g. `!mb add Jerome intj`"
 
   return help;
 
