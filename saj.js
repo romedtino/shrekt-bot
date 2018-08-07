@@ -3,6 +3,7 @@ var request = require ("request");
 var uri = "https://api.twitch.tv/helix/clips?broadcaster_id=30635747"
 
 var jsCommand = "sajlate";
+var latestTime = "";
 
 function help_info() {
   var help = {};
@@ -18,16 +19,12 @@ function execute(command, args, message) {
     request({
             url: uri,
             headers : {
+              'Client-ID' : process.env.TWITCH_TOKEN
             }
         }, function (error, response, body) {
-            if(body.file === undefined )
-            {
-              message.channel.send("<@" + message.author.id +"> Sorry the meow API is overloaded... try again later.");
-            }
-            else {
-              message.channel.send("<@" + message.author.id + "> meow! " + body.file);
-            }
-            })
+            var parsed = JSON.parse(body);
+            
+    })
   }
 
 }
