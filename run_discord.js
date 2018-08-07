@@ -10,6 +10,7 @@ commandList.push(require('./meow.js'));
 commandList.push(require('./bark.js'));
 commandList.push(require('./mb.js'));
 commandList.push(require('./victory_royale.js'));
+commandList.push(require('./saj.js'));
 
 const help = require('./help.js');
 commandList.push(help);
