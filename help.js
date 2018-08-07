@@ -11,6 +11,7 @@ function help_info() {
 }
 
 function add_command(help) {
+  if(help.command == null || help.command == "") return;
   command_list[help.command] = help.help; 
 
 }

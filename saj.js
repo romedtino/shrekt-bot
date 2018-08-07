@@ -1,4 +1,5 @@
 var request = require('request');
+var filter = require('./channel_filter.js')
 
 var twitchAPI = 'https://api.twitch.tv/helix';
 var latestClipURL = "";
@@ -8,12 +9,13 @@ var clipCount = '&first=100';
 
 function help_info() {
   var help = {};
-  help["command"] = "saj";
+  help["command"] = null;
   help["help"] = "";
 
   return help;
  
 }
+
 
 function twitchClipsRequest(message, extraURLParams)
 {
@@ -48,11 +50,12 @@ function twitchClipsRequest(message, extraURLParams)
   
 }
 
-function execute(command, args, message) {
+function execute(command, args, message) 
 {
-  twitchClipsRequest(message, mainUser + clipCount);
+  if(command === "saj" && filter(message)) {
+     twitchClipsRequest(message, mainUser + clipCount);
+  }
 }
 
 module.exports.execute = execute;
 module.exports.help_info = help_info;
-  
