@@ -3,7 +3,8 @@ var filter = require('./channel_filter.js')
 function help_info() {
   var help = {};
   help["command"] = "poll";
-  help["help"] = "Start a poll. Usage: !poll [Poll Question],[Option 1 emoji],[Option 1 text],[Option 2 emoji],[Option 2 text],...[Option N emoji],[Option N text]";
+  help["help"] = "Start a poll. Usage: `!poll [Poll Question],[Option 1 emoji],[Option 1 text],[Option 2 emoji],[Option 2 text],...[Option N emoji],[Option N text]`";
+  help["help"] = "\n    e.g. `!poll Who is the best at making breakfast?, :laughing: , John Adams, :rofl:, Benjamin Button`"
 
   return help;
  
@@ -12,13 +13,12 @@ function help_info() {
 function execute(command, args, message, client) {
   
   if(command === "poll" && filter(message)) {
-    var channelID = "asf"
+    var channelName = "polls"
     var pollText = ""
     var pollInfo = args.join(" ").split(',');
-    var emojiList = [];
     
     if(pollInfo.length % 2 == 0) {
-      message.channel.send("Bad poll format.");
+      message.channel.send("Bad poll format. Please type `!help` to know how to properly create a poll");
       return
     }
     pollText += pollInfo[0] + "\n"
@@ -26,22 +26,20 @@ function execute(command, args, message, client) {
     
     //i=1 -- exclude poll question
     for(var i=1;i < pollInfo.length-1;i=i+2)
-    {
-      emojiList.push(pollInfo[i]);
-      console.log("storingemoji:" + pollInfo[i]);
-      
+    {      
       pollText += pollInfo[i] + " - " + pollInfo[i+1] + "\n"; 
     }
     
     
-    client.channels.find("name", channelID).send(pollText)
+    client.channels.find("name", channelName).send(pollText)
       .then(function (message) {
       
-          for(var j=0;j<emojiList.length;j++)
+          for(var i=1;i < pollInfo.length-1;i=i+2)
           {
-              console.log("emoji is:" + emojiList[i]);
-              message.react(emojiList[i])
+            console.log("storingemoji:" + pollInfo[i]);
+            message.react(pollInfo[i].trim())
           }
+
       }).catch(function() {
           message.channel.send("Something went wonky with creating your poll :(");
       });
