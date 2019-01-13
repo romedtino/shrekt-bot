@@ -39,8 +39,11 @@ function execute(command, args, message, client) {
             var actualText;
             if(pollInfo[i].includes(":")) {
                //custom emoji
-              var newbanana = banana.substr(banana.lastIndexOf(":")+1);
-              console.log(newbanana.substr(0, newbanana.length-1))
+              var partial = pollInfo[i].substr(pollInfo[i].lastIndexOf(":")+1);
+              console.log("partial: " + partial);
+              var full = partial.substr(0, partial.length-1);
+              console.log("full: " + full);
+              message.react(full);
             } else {
                //standard
                message.react(pollInfo[i]);
