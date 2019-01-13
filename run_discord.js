@@ -11,7 +11,7 @@ commandList.push(require('./bark.js'));
 commandList.push(require('./mb.js'));
 commandList.push(require('./victory_royale.js'));
 commandList.push(require('./saj.js'));
-
+commandList.push(require('./poll.js'));
 const help = require('./help.js');
 commandList.push(help);
 
