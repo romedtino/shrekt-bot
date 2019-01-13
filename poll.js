@@ -39,11 +39,13 @@ function execute(command, args, message, client) {
             var actualText;
             if(pollInfo[i].includes(":")) {
                //custom emoji
-              var partial = pollInfo[i].substr(pollInfo[i].lastIndexOf(":")+1);
+              var partial = pollInfo[i].trim().substr(pollInfo[i].lastIndexOf(":")+1);
+              console.log("raw: " + pollInfo[i].trim();
               console.log("partial: " + partial);
               var full = partial.substr(0, partial.length-1);
-              console.log("full: " + full);
-              message.react(full);
+              var tgtEmoji = client.emojis.get(full);
+              console.log("full: " + tgtEmoji.id);
+              message.react(tgtEmoji.id);
             } else {
                //standard
                message.react(pollInfo[i]);
