@@ -36,11 +36,19 @@ function execute(command, args, message, client) {
       
           for(var i=1;i < pollInfo.length-1;i=i+2)
           {
-            var emojisubstr = pollInfo[i].substr(1).slice(0, -1);
-            console.log("raw: " + emojisubstr);
-            const customEmoji = client.emojis.find(emoji => emoji.name === emojisubstr);
-            console.log("storingemoji:" + customEmoji.id);
-            message.react(customEmoji.id);
+            var actualText;
+            if(pollInfo[i].includes(":")) {
+               //custom emoji
+              var newbanana = banana.substr(banana.lastIndexOf(":")+1);
+              console.log(newbanana.substr(0, newbanana.length-1))
+            } else {
+               //standard
+               message.react(pollInfo[i]);
+            }
+            //console.log("raw: " + emojisubstr);
+            //const customEmoji = client.emojis.find(emoji => emoji.name === emojisubstr);
+            //console.log("storingemoji:" + customEmoji.id);
+            
           }
 
       }).catch(function() {
