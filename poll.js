@@ -12,10 +12,9 @@ function help_info() {
 function execute(command, args, message, client) {
   
   if(command === "poll" && filter(message)) {
-    console.log("We are poll");
     var channelID = "asf"
     var pollText = ""
-    var pollInfo = args.toString().split(',');
+    var pollInfo = args.join(" ").split(',');
     var emojiList = [];
     
     if(pollInfo.length % 2 == 0) {
@@ -23,11 +22,13 @@ function execute(command, args, message, client) {
       return
     }
     pollText += pollInfo[0] + "\n"
+    console.log("pollInfo start: " + pollInfo[0]);
     
     //i=1 -- exclude poll question
     for(var i=1;i < pollInfo.length-1;i=i+2)
     {
       emojiList.push(pollInfo[i]);
+      console.log("storingemoji:" + pollInfo[i]);
       
       pollText += pollInfo[i] + " - " + pollInfo[i+1] + "\n"; 
     }
@@ -35,8 +36,10 @@ function execute(command, args, message, client) {
     
     client.channels.find("name", channelID).send(pollText)
       .then(function (message) {
+      
           for(var j=0;j<emojiList.length;j++)
           {
+              console.log("emoji is:" + emojiList[i]);
               message.react(emojiList[i])
           }
       }).catch(function() {
