@@ -22,7 +22,7 @@ function execute(command, args, message, client) {
       return
     }
     pollText += pollInfo[0] + "\n"
-    console.log("pollInfo start: " + pollInfo[0]);
+    console.log("Poll Question: " + pollInfo[0]);
     
     //i=1 -- exclude poll question
     for(var i=1;i < pollInfo.length-1;i=i+2)
@@ -36,8 +36,11 @@ function execute(command, args, message, client) {
       
           for(var i=1;i < pollInfo.length-1;i=i+2)
           {
-            console.log("storingemoji:" + pollInfo[i]);
-            message.react(pollInfo[i].trim())
+            var emojisubstr = pollInfo[i].substr(1).slice(0, -1);
+            console.log("raw: " + emojisubstr);
+            const customEmoji = client.emojis.find(emoji => emoji.name === emojisubstr);
+            console.log("storingemoji:" + customEmoji.id);
+            message.react(customEmoji.id);
           }
 
       }).catch(function() {
