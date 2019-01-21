@@ -16,10 +16,22 @@ function help_info() {
  
 }
 
-
-function twitchClipsRequest(message, extraURLParams)
+function getbcastID(message, args, extraURLParams)
 {
-  var options = { url:twitchAPI + '/clips?' + extraURLParams,
+   var options = { url:twitchAPI + '/users?login=' + args,
+                  json: true,
+                  headers: {
+                    "Client-ID" : process.env.TWITCH_TOKEN
+                  }
+                };
+  
+}
+
+
+function twitchClipsRequest(message, args)
+{
+  var mainUser = 'broadcaster_id=' + process.env.BCAST_ID;
+  var options = { url:twitchAPI + '/clips?' + mainUser + clipCount,
                   json: true,
                   headers: {
                     "Client-ID" : process.env.TWITCH_TOKEN
@@ -41,7 +53,7 @@ function twitchClipsRequest(message, extraURLParams)
         var paginator = "&after=" + body.pagination.cursor;
         twitchClipsRequest(message, mainUser + clipCount + paginator);
       } else {
-        message.channel.send("<@" + message.author.id + "> here is Sajedene's latest clip: " + latestClipURL);
+        message.channel.send("<@" + message.author.id + "> here is " + args + "'s latest clip: " + latestClipURL);
         console.log("Found it: " + latestClipURL);
       }
       
@@ -53,7 +65,7 @@ function twitchClipsRequest(message, extraURLParams)
 function execute(command, args, message) 
 {
   if(command === "saj" && filter(message)) {
-     twitchClipsRequest(message, mainUser + clipCount);
+     twitchClipsRequest(message, args);
   }
 }
 
