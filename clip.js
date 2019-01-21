@@ -6,6 +6,7 @@ var latestClipURL = "";
 var latestClipMilli = null;
 var mainUser = 'broadcaster_id=';
 var clipCount = '&first=100';
+var login = "";
 
 function help_info() {
   var help = {};
@@ -16,7 +17,7 @@ function help_info() {
  
 }
 
-var twitchClipsRequest = function(message, login, extraParams)
+var twitchClipsRequest = function(message, extraParams)
 {
   var options = { url:twitchAPI + '/clips?' + mainUser + clipCount + extraParams,
                   json: true,
@@ -38,7 +39,7 @@ var twitchClipsRequest = function(message, login, extraParams)
       if(body.pagination.cursor != null)
       {
         var paginator = "&after=" + body.pagination.cursor;
-        twitchClipsRequest(message, login, paginator);
+        twitchClipsRequest(message, paginator);
       } else {
         message.channel.send("<@" + message.author.id + "> here is " + login + "'s latest clip: " + latestClipURL);
         console.log("Found it: " + latestClipURL);
@@ -49,7 +50,7 @@ var twitchClipsRequest = function(message, login, extraParams)
   
 }
 
-var getIdAndClip = function(message, login)
+var getIdAndClip = function(message)
 {
    var options = { url:twitchAPI + '/users?login=' + login,
                   json: true,
@@ -60,16 +61,18 @@ var getIdAndClip = function(message, login)
   request(options, function(error, response, body) {
     
     var bcastId = body.data[0].id;
-    console.log(bcastId);
-    twitchClipsRequest(message, bcastId);
+    mainUser += bcastId;
+    console.log(mainUser);
+    twitchClipsRequest(message, "");
   });
   
 }
 
 function execute(command, args, message) 
 {
-  if(command === "saj" && filter(message)) {
-     getIdAndClip(message, args[0]);
+  if(command === "clip" && filter(message)) {
+     login = args[0];
+     getIdAndClip(message, login);
   }
 }
 
