@@ -4,7 +4,7 @@ function help_info() {
   var help = {};
   help["command"] = "poll";
   help["help"] = "Start a poll. Usage: `!poll [Poll Question],[Option 1 emoji],[Option 1 text],[Option 2 emoji],[Option 2 text],...[Option N emoji],[Option N text]`";
-  help["help"] = "\n    e.g. `!poll Who is the best at making breakfast?, :laughing: , John Adams, :rofl:, Benjamin Button`"
+  help["help"] += "\n    e.g. `!poll Who is the best at making breakfast?, :laughing: , John Adams, :rofl:, Benjamin Button`"
 
   return help;
  

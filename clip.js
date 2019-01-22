@@ -10,8 +10,8 @@ var login = "";
 
 function help_info() {
   var help = {};
-  help["command"] = null;
-  help["help"] = "";
+  help["command"] = "clip";
+  help["help"] = "Grabs the latest Twitch.tv clip of a given user. Usage: `!clip [Twitch Username]`\n    e.g. `!clip Sajedene`";
 
   return help;
  
