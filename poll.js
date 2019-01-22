@@ -10,11 +10,10 @@ function help_info() {
  
 }
 
-function execute(command, args, message, client) {
+function execute(command, args, message) {
   
   if(command === "poll" && filter(message)) {
-    var channelName = "polls"; //live
-        channelName = "pollx"; //test
+    var channelName = "polls"; 
     var pollText = ""
     var pollInfo = args.join(" ").split(',');
     
@@ -32,7 +31,7 @@ function execute(command, args, message, client) {
     }
     
     
-    message.client.channels.find("name", channelName).send(pollText)
+    message.guild.channels.find("name", channelName).send(pollText)
       .then(function (message) {
       
           for(var i=1;i < pollInfo.length-1;i=i+2)
@@ -46,7 +45,7 @@ function execute(command, args, message, client) {
               console.log("emoji part:__" + partial + "__");
               var full = partial.substr(1, partial.length-2);
               console.log("emoji full:__" + full + "__");
-              var tgtEmoji = client.emojis.get(full);
+              var tgtEmoji = message.client.emojis.get(full);
               message.react(tgtEmoji);
             } else {
                //standard
