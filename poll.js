@@ -32,7 +32,7 @@ function execute(command, args, message, client) {
     }
     
     
-    client.channels.find("name", channelName).send(pollText)
+    message.client.channels.find("name", channelName).send(pollText)
       .then(function (message) {
       
           for(var i=1;i < pollInfo.length-1;i=i+2)
@@ -43,9 +43,9 @@ function execute(command, args, message, client) {
                //custom emoji
               var partial = pollInfo[i].trim();
               partial = partial.substr(partial.lastIndexOf(":"));
-
-              var full = partial.substr(1, partial.length-1);
-              console.log("emoji full:__" + full, 
+              console.log("emoji part:__" + partial + "__");
+              var full = partial.substr(1, partial.length-2);
+              console.log("emoji full:__" + full + "__");
               var tgtEmoji = client.emojis.get(full);
               message.react(tgtEmoji);
             } else {
