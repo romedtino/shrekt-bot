@@ -13,7 +13,8 @@ function help_info() {
 function execute(command, args, message, client) {
   
   if(command === "poll" && filter(message)) {
-    var channelName = "polls"
+    var channelName = "polls"; //live
+        channelName = "pollx"; //test
     var pollText = ""
     var pollInfo = args.join(" ").split(',');
     
@@ -42,7 +43,7 @@ function execute(command, args, message, client) {
               var partial = pollInfo[i].trim().substr(pollInfo[i].lastIndexOf(":"));
               console.log("raw:__" + pollInfo[i].trim() + "__");
               console.log("partial: " + partial);
-              var full = partial.substr(0, partial.length-1);
+              var full = partial.substr(1, partial.length-1);
               var tgtEmoji = client.emojis.get(full);
               console.log("full: " + tgtEmoji.id);
               message.react(tgtEmoji);
