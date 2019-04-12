@@ -5,7 +5,7 @@ let cmd = "evan";
 function help_info() {
   var help = {};
   help["command"] = cmd;
-  help["help"] = "Usage: `!evan `"
+  help["help"] = "No one knows what this does... Usage: `!evan `"
 
   return help;
 
@@ -13,6 +13,7 @@ function help_info() {
 
 function execute(command, args, message) {
   if(command === cmd && filter(message)) {
+    message.channel.send("What's an evan?");
     message.delete()
       .then(() => console.log(`message poof`))
       .catch(console.error);

@@ -33,7 +33,7 @@ function execute(command, args, message) {
     try
     {
       message.guild.channels.find("name", channelName)
-        .send(pollText)
+        .send("<@" + message.author.id +"> " + pollText)
         .then(function (message) {
       
           for(var i=1;i < pollInfo.length-1;i=i+2)
@@ -54,8 +54,11 @@ function execute(command, args, message) {
                message.react(pollInfo[i].trim());
             }            
           }
-
-      }).catch(function() {
+      message.delete()
+        .then(() => console.log("message deleted."))
+        .catch(console.error);
+      })
+      .catch(function() {
           message.channel.send("Something went wonky with creating your poll :(");
       });
     } catch(error) 
