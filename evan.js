@@ -13,7 +13,7 @@ function help_info() {
 
 function execute(command, args, message) {
   if(command === cmd && filter(message)) {
-    message.channel.send("What's an evan?");
+    message.channel.send("<@" + message.author.id +"> ... What's an evan?");
     message.delete()
       .then(() => console.log(`message poof`))
       .catch(console.error);
