@@ -13,6 +13,8 @@ function execute(command, args, message) {
   
   if(command === "slap" && filter(message)) {
     message.channel.send("<@" + message.author.id + "> slaps " + args + " around a bit with a large trout");
+    message.delete()
+    .then(`
   }
 
 
