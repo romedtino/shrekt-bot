@@ -32,9 +32,9 @@ function execute(command, args, message) {
     
     try
     {
-    message.guild.channels.find("name", channelName)
-      .send(pollText)
-      .then(function (message) {
+      message.guild.channels.find("name", channelName)
+        .send(pollText)
+        .then(function (message) {
       
           for(var i=1;i < pollInfo.length-1;i=i+2)
           {
