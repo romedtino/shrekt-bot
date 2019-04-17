@@ -11,6 +11,10 @@ function help_info() {
 
 }
 
+function getLastPlayed() {
+  var steamCmd = "http://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v0001/?key=" + process.env.STEAMKEY + "&steamid=" + process.env.EVANSKEY + "&format=json";
+}
+
 function execute(command, args, message) {
   if(command === cmd && filter(message)) {
     message.channel.send("<@" + message.author.id +"> ... What's an evan?");
