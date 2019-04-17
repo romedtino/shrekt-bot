@@ -25,7 +25,9 @@ function getLastPlayed(message) {
         var appid = body.response.games[0].appid;
         var hash = body.response.games[0].img_logo_url;
         var icon = `http://media.steampowered.com/steamcommunity/public/images/apps/${appid}/${hash}.jpg`
-        message.channel.send("<@" + message.author.id +">  The latest game Evan is modding in **DOA** *jiggle* physics was " + body.response.games[0].name + `\n ${icon}`);
+        message.channel.send("<@" + message.author.id +"> :mount_fuji: :mount_fuji: The latest game Evan is modding in **DOA** *jiggle* physics for is `" 
+                             + body.response.games[0].name + "`"
+                             + `\n ${icon}` );
       }
       });
 }
