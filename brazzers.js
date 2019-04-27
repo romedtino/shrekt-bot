@@ -1,12 +1,8 @@
 var filter = require('./channel_filter.js')
 var imgur = require('imgur');
-var sizeOf = require('image-size');
 var fs = require('fs');
 var mergeImages = require('merge-images');
-var Canvas = require('canvas');
-var url = require('url');
-var https = require('https');
-
+const Canvas = require('canvas');
 var imgur_ep = 'https://api.imgur.com/3/';
 var jsCommand = "brazzers";
 
@@ -17,23 +13,6 @@ function help_info() {
 
   return help;
 
-}
-
-function getImgURL(imgUrl) {
-  return new Promise( (resolve, reject) => {
-    var options = url.parse(imgUrl);
-
-    https.get(options, function (response) {
-      var chunks = [];
-      response.on('data', function (chunk) {
-        chunks.push(chunk);
-      }).on('end', function() {
-        var buffer = Buffer.concat(chunks);
-        // console.log(sizeOf(buffer));
-        resolve(sizeOf);
-      });
-    });
-  });
 }
 
 function execute(command, args, message) {
@@ -49,23 +28,18 @@ function execute(command, args, message) {
     let width, height;
     let backgroundColor = '0x000000'
     
-    getImgURL('https://i.imgur.com/s5AUpuY.jpg')
-      .then( sizeinfo => { 
-      width = sizeinfo.width;
-      height = sizeinfo.height;
-      mergeImages(['https://i.imgur.com/s5AUpuY.jpg', 'https://i.imgur.com/gSnHoXE.jpg'], {
-        Canvas: Canvas
-      })
-        .then( b64 => {
-          fs.writeFile(`/tmp/${tmpFilename}`, b64, 'base64', err => console.log(err));
-           imgur.uploadFile(`/tmp/${tmpFilename}`, process.env.IMGUR_ALBUM)
-        .then(function (json) {
-          console.log(json.data.link);
-        })
-        .catch(function (err) {
-          console.error(err.message);
-        });
-      });
+    mergeImages(['https://i.imgur.com/s5AUpuY.jpg', 'https://i.imgur.com/gSnHoXE.jpg'], {
+      Canvas: Canvas
+    })
+      .then( b64 => {
+        imgur.uploadBase64(b64)
+         imgur.uploadFile(`/tmp/${tmpFilename}`, process.env.IMGUR_ALBUM)
+            .then(function (json) {
+              console.log(json.data.link);
+            })
+            .catch(function (err) {
+              console.error(err.message);
+            });
     });
     
     
