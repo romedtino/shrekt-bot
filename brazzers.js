@@ -1,6 +1,7 @@
 var filter = require('./channel_filter.js')
 var imgur = require('imgur');
-var imgur_ep = 'https://api.imgur.com/3/'
+var imgur_ep = 'https://api.imgur.com/3/';
+var gd = require('easy-gd');
 
 var jsCommand = "brazzers";
 
@@ -15,14 +16,19 @@ function help_info() {
 
 function execute(command, args, message) {
   if(command === jsCommand && filter(message)) {
+    var tmpFilename;
+    if(args[0] === "") {
+      var seconds = new Date() / 1000;
+      tmpFilename = String(seconds);
+    }
     
     imgur.setAPIUrl(imgur_ep);
     
     gm('https://i.imgur.com/s5AUpuY.jpg')
       .draw(['image Over 0,0 0,0 https://i.imgur.com/gSnHoXE.jpg'])
-      .write(
+      .write(`/tmp/${args[0]}.jpg`, e => console.log(e));
       
-    imgur.uploadFile(target, process.env.IMGUR_ALBUM)
+    imgur.uploadFile(`/tmp/${args[0]}`, process.env.IMGUR_ALBUM)
       .then(function (json) {
         console.log(json.data.link);
       })
