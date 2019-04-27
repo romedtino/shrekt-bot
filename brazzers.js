@@ -25,18 +25,28 @@ function execute(command, args, message) {
     }
       
       request('https://i.imgur.com/s5AUpuY.jpg', { encoding: 'binary'}, (err, res, body) => {
-        fs.writeFile('downloaded.jpg', body, 'binary', err => {
+        fs.writeFile('img1.jpg', body, 'binary', err => {
             request('https://i.imgur.com/gSnHoXE.jpg', { encoding: 'binary'}, (err2, res2, body2) => {
-              fs.writeFile('downloaded.jpg', body, 'binary', err => {
-            sharp(body)
-              .composite([{input: body2, gravity: sharp.gravity.southeast }])
-              .toFile('/tmp/brazzers.png')
-              .then( data => {
-                message.channel.send(`<@${message.author.id}> here ya go`, {
-                    files: ['/tmp/brazzers.png']
-                  });
-              })
-              .catch( err => console.log(err));
+              fs.writeFile('img2.jpg', body2, 'binary', err => {
+                sharp('img1.jpg')
+                  .resize( { height: 1080 })
+                  .toFile('img1.png')
+                  .then( data => {
+                    sharp('img2.jpg')
+                      .resize( {
+                  })
+                  .catch( err => console.log(err));
+                
+                  .composite([{input: 'img2.jpg', gravity: sharp.gravity.southeast }])
+                  .toFile('/tmp/brazzers.png')
+                  .then( data => {
+                    message.channel.send(`<@${message.author.id}> here ya go`, {
+                        files: ['/tmp/brazzers.png']
+                      });
+                  })
+                  .catch( err => console.log(err));
+              });
+            
           });
         });
 
