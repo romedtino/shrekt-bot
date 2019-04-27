@@ -1,9 +1,13 @@
 var filter = require('./channel_filter.js')
 var imgur = require('imgur');
-var imgsize = require('image-size');
-var imgur_ep = 'https://api.imgur.com/3/';
-var MC = require('mcanvas');
+var sizeOf = require('image-size');
 var fs = require('fs');
+var mergeImages = require('merge-images');
+var Canvas = require('canvas');
+var url = require('url');
+var https = require('https');
+
+var imgur_ep = 'https://api.imgur.com/3/';
 var jsCommand = "brazzers";
 
 function help_info() {
@@ -15,17 +19,19 @@ function help_info() {
 
 }
 
-function getImgrURL {
-  var imgUrl = 'http://my-amazing-website.com/image.jpeg';
-  var options = url.parse(imgUrl);
+function getImgURL(imgUrl) {
+  return new Promise( (resolve, reject) => {
+    var options = url.parse(imgUrl);
 
-  http.get(options, function (response) {
-    var chunks = [];
-    response.on('data', function (chunk) {
-      chunks.push(chunk);
-    }).on('end', function() {
-      var buffer = Buffer.concat(chunks);
-      console.log(sizeOf(buffer));
+    https.get(options, function (response) {
+      var chunks = [];
+      response.on('data', function (chunk) {
+        chunks.push(chunk);
+      }).on('end', function() {
+        var buffer = Buffer.concat(chunks);
+        // console.log(sizeOf(buffer));
+        resolve(sizeOf);
+      });
     });
   });
 }
@@ -42,34 +48,23 @@ function execute(command, args, message) {
     
     let width, height;
     let backgroundColor = '0x000000'
-    imgsize('https://i.imgur.com/gSnHoXE.jpg', (err, dim) => {
-        console.log(err);
-        width = dim.width;
-        height = dim.height;
-    });
     
-    // create the canvas by width and height;
-    let mc = new MC({
-        width,
-        height,
-        backgroundColor,
-    });
-    
-    // prepare background-image
-    mc.background('https://i.imgur.com/gSnHoXE.jpg',{
-        left:0,
-        top:0,
-        color:'#000000',
-        type:'origin',
-    })
-      .draw( b64 => {
-        fs.writeFile(`/tmp/${tmpFilename}`, b64, 'base64', err => console.log(err));
-         imgur.uploadFile(`/tmp/${tmpFilename}`, process.env.IMGUR_ALBUM)
-      .then(function (json) {
-        console.log(json.data.link);
+    getImgURL('https://i.imgur.com/s5AUpuY.jpg')
+      .then( sizeinfo => { 
+      width = sizeinfo.width;
+      height = sizeinfo.height;
+      mergeImages(['https://i.imgur.com/s5AUpuY.jpg', 'https://i.imgur.com/gSnHoXE.jpg'], {
+        Canvas: Canvas
       })
-      .catch(function (err) {
-        console.error(err.message);
+        .then( b64 => {
+          fs.writeFile(`/tmp/${tmpFilename}`, b64, 'base64', err => console.log(err));
+           imgur.uploadFile(`/tmp/${tmpFilename}`, process.env.IMGUR_ALBUM)
+        .then(function (json) {
+          console.log(json.data.link);
+        })
+        .catch(function (err) {
+          console.error(err.message);
+        });
       });
     });
     
@@ -81,13 +76,13 @@ function execute(command, args, message) {
     
     // watermarked.save(`/tmp/${tmpFilename}.jpg`);
       
-    imgur.uploadFile(`/tmp/${tmpFilename}`, process.env.IMGUR_ALBUM)
-      .then(function (json) {
-        console.log(json.data.link);
-      })
-      .catch(function (err) {
-        console.error(err.message);
-      });
+    // imgur.uploadFile(`/tmp/${tmpFilename}`, process.env.IMGUR_ALBUM)
+    //   .then(function (json) {
+    //     console.log(json.data.link);
+    //   })
+    //   .catch(function (err) {
+    //     console.error(err.message);
+    //   });
 
     
     // request({
