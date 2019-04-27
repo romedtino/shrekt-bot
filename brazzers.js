@@ -3,6 +3,7 @@ var imgur = require('imgur');
 var fs = require('fs');
 var mergeImages = require('merge-images');
 const Canvas = require('canvas');
+var request = require('request');
 var jsCommand = "brazzers";
 
 function help_info() {
@@ -22,25 +23,28 @@ function execute(command, args, message) {
       tmpFilename = String(seconds);
     }
     
-    imgur.setAPIUrl(`https://api.imgur.com/oauth2/authorize?client_id=${process.env.IMGUR_CLIENTID}&response_type=token`);
+    imgur.setAPIUrl('https://api.imgur.com/3');
     imgur.setClientId(process.env.IMGUR_CLIENTID);
     
-    let width, height;
-    let backgroundColor = '0x000000'
-    
-    mergeImages(['https://i.imgur.com/s5AUpuY.jpg', 'https://i.imgur.com/gSnHoXE.jpg'], {
-      Canvas: Canvas
-    })
-      .then( b64 => {
-      
-        imgur.uploadBase64(b64)
-            .then(function (json) {
-              console.log(json.data.link);
-            })
-            .catch(function (err) {
-              console.error(err.message);
-            });
+    request(`https://api.imgur.com/oauth2/authorize?client_id=${process.env.IMGUR_CLIENTID}&response_type=token`, (err, res, body) => {
+      console.log(body);
+//       mergeImages(['https://i.imgur.com/s5AUpuY.jpg', 'https://i.imgur.com/gSnHoXE.jpg'], {
+//         Canvas: Canvas
+//       })
+//         .then( b64 => {
+
+//           imgur.uploadBase64(b64)
+//               .then(function (json) {
+//                 console.log(json.data.link);
+//               })
+//               .catch(function (err) {
+//                 console.error(err.message);
+//               });
+//       });
     });
+    
+    
+    
     
     
     
