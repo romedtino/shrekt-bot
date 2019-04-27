@@ -23,42 +23,48 @@ function execute(command, args, message) {
     if(args[0] === "") {
       tmpFilename = 'https://i.imgur.com/s5AUpuY.jpg';
     }
-      console.log(tmpFilename);
-      fs.unlinkSync('/tmp/img1.jpg');
-      fs.unlinkSync('/tmp/img1.jpg');
-      request(tmpFilename, { encoding: 'binary'}, (err, res, body) => {
-        fs.writeFile('/tmp/img1.jpg', body, 'binary', err => {
-            request(brazzersLogoURL, { encoding: 'binary'}, (err2, res2, body2) => {
-              fs.writeFile('/tmp/img2.jpg', body2, 'binary', err => {
-                sharp('/tmp/img1.jpg')
-                  .resize( { width: 1920 })
-                  .toFile('/tmp/img1r.png')
-                  .then( () => {
-                    sharp('/tmp/img2.jpg')
-                      .resize( { width: 480 })
-                      .toFile('/tmp/img2r.png')
-                      .then( () => {
-                          sharp('/tmp/img1r.png')
-                            .composite([{input: '/tmp/img2r.png', gravity: sharp.gravity.southeast }])
-                            .toFile('/tmp/brazzers.png')
-                            .then( data => {
-                              message.channel.send(`<@${message.author.id}> here ya go`, {
-                                  files: ['/tmp/brazzers.png']
-                                });
-                            })
-                            .catch( err => console.log(err));
-                      })
-                      .catch( err => console.log(err));
-                  })
-                  .catch( err => console.log(err));
-                
-                  
-              });
-            
-          });
-        });
+    console.log(tmpFilename);
+    var ext = tmpFilename.split('.').pop();
+    request(tmpFilename, { encoding: 'binary'}, (err, res, body) => {
+      fs.writeFile(`/tmp/img1.${ext}', body, 'binary', err => {
+          request(brazzersLogoURL, { encoding: 'binary'}, (err2, res2, body2) => {
+            fs.writeFile('/tmp/img2.jpg', body2, 'binary', err => {
+              sharp('/tmp/img1.jpg')
+                .resize( { width: 1920 })
+                .toFile('/tmp/img1r.jpg')
+                .then( () => {
+                  sharp('/tmp/img2.jpg')
+                    .resize( { width: 480 })
+                    .toFile('/tmp/img2r.jpg')
+                    .then( () => {
+                        sharp('/tmp/img1r.jpg')
+                          .composite([{input: '/tmp/img2r.jpg', gravity: sharp.gravity.southeast }])
+                          .toFile('/tmp/brazzers.jpg')
+                          .then( data => {
+                            message.channel.send(`<@${message.author.id}> here ya go`, {
+                                files: ['/tmp/brazzers.jpg']
+                              });
 
+                            fs.unlinkSync('/tmp/img1.jpg', err => console.log(err));
+                            fs.unlinkSync('/tmp/img1r.jpg', err => console.log(err));
+                            fs.unlinkSync('/tmp/img2.jpg', err => console.log(err));
+                            fs.unlinkSync('/tmp/img1r.jpg', err => console.log(err));
+                            fs.unlinkSync('/tmp/brazzers.jpg', err => console.log(err));
+
+                          })
+                          .catch( err => console.log(err));
+                    })
+                    .catch( err => console.log(err));
+                })
+                .catch( err => console.log(err));
+
+
+            });
+
+        });
       });
+
+    });
     
   }
 
