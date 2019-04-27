@@ -2,6 +2,7 @@ var filter = require('./channel_filter.js')
 var imgur = require('imgur');
 var fs = require('fs');
 var mergeImages = require('merge-images');
+var sharp = require('sharp');
 const Canvas = require('canvas');
 var request = require('request');
 var jsCommand = "brazzers";
@@ -22,55 +23,32 @@ function execute(command, args, message) {
       var seconds = new Date() / 1000;
       tmpFilename = String(seconds);
     }
+  
+      sharp('https://i.imgur.com/s5AUpuY.jpg')
+        .overlayWith('https://i.imgur.com/gSnHoXE.jpg', { gravity: sharp.gravity.southeast } )
+        .toFile('/tmp/brazzers.png')
+        .then( data => {
+          message.channel.send(`<@${message.author.id}>`, {
+              files: ['https://i.imgur.com/s5AUpuY.jpg']
+            });
+        })
+        .catch( err => console.log(err));
     
-//     imgur.setAPIUrl('https://api.imgur.com/3');
-//     imgur.setClientId(process.env.IMGUR_CLIENTID);
-    
-    // request(`https://api.imgur.com/oauth2/authorize?client_id=${process.env.IMGUR_CLIENTID}&response_type=token`, (err, res, body) => {
-      // console.log(body);
-      mergeImages(['https://i.imgur.com/s5AUpuY.jpg', 'https://i.imgur.com/gSnHoXE.jpg'], {
-        Canvas: Canvas
-      })
-        .then( b64 => {
-          fs.writeFile("/tmp/brazzers.png", b64, 'base64', err => {
-            if(err) {
-              console.log(err)
-            } else {
-              message.channel.send(`<@${message.author.id}>`, {
-                files: ['/tmp/brazzers.png']
-              });
-            }
-          });
+      // mergeImages(['https://i.imgur.com/s5AUpuY.jpg', 'https://i.imgur.com/gSnHoXE.jpg'], {
+      //   Canvas: Canvas
+      // })
+      //   .then( b64 => {
+      //     fs.writeFile("/tmp/brazzers.png", b64, 'base64', err => {
+      //       if(err) {
+      //         console.log(err)
+      //       } else {
+      //         message.channel.send(`<@${message.author.id}>`, {
+      //           files: ['https://i.imgur.com/s5AUpuY.jpg']
+      //         });
+      //       }
+      //     });
+      //    });
           
-          // imgur.uploadBase64(b64)
-          //     .then(function (json) {
-          //       console.log(json.data.link);
-          //     })
-          //     .catch(function (err) {
-          //       console.error(err.message);
-          //     });
-      });
-    // });
-    
-    
-    
-    
-    
-    
-    // var image = gd.open('https://i.imgur.com/s5AUpuY.jpg');
-    
-    // var watermarked = image.watermark('https://i.imgur.com/gSnHoXE.jpg', {x: 1, y: 1});
-    
-    // watermarked.save(`/tmp/${tmpFilename}.jpg`);
-      
-    // imgur.uploadFile(`/tmp/${tmpFilename}`, process.env.IMGUR_ALBUM)
-    //   .then(function (json) {
-    //     console.log(json.data.link);
-    //   })
-    //   .catch(function (err) {
-    //     console.error(err.message);
-    //   });
-
     
     // request({
     //         url: cat,
