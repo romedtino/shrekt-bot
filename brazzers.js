@@ -23,13 +23,21 @@ function execute(command, args, message) {
     if(args[0] === "") {
       tmpFilename = 'https://i.imgur.com/s5AUpuY.jpg';
     }
-    console.log(tmpFilename);
     var ext = tmpFilename.split('.').pop();
+    console.log(tmpFilename);
+    // fs.unlinkSync(`/tmp/img1.${ext}`, err => console.log(err));
+    // fs.unlinkSync('/tmp/img1r.jpg', err => console.log(err));
+    // fs.unlinkSync('/tmp/img2.jpg', err => console.log(err));
+    // fs.unlinkSync('/tmp/img2r.jpg', err => console.log(err));
+    // fs.unlinkSync('/tmp/brazzers.jpg', err => console.log(err));
+
     request(tmpFilename, { encoding: 'binary'}, (err, res, body) => {
-      fs.writeFile(`/tmp/img1.${ext}', body, 'binary', err => {
+      fs.writeFile(`/tmp/img1.${ext}`, body, 'binary', errWrite => {
+          if(errWrite) console.log(err);
           request(brazzersLogoURL, { encoding: 'binary'}, (err2, res2, body2) => {
-            fs.writeFile('/tmp/img2.jpg', body2, 'binary', err => {
-              sharp('/tmp/img1.jpg')
+            fs.writeFile('/tmp/img2.jpg', body2, 'binary', errWrite2 => {
+              if(errWrite2) console.log(errWrite2);
+              sharp(`/tmp/img1.${ext}`)
                 .resize( { width: 1920 })
                 .toFile('/tmp/img1r.jpg')
                 .then( () => {
@@ -44,13 +52,6 @@ function execute(command, args, message) {
                             message.channel.send(`<@${message.author.id}> here ya go`, {
                                 files: ['/tmp/brazzers.jpg']
                               });
-
-                            fs.unlinkSync('/tmp/img1.jpg', err => console.log(err));
-                            fs.unlinkSync('/tmp/img1r.jpg', err => console.log(err));
-                            fs.unlinkSync('/tmp/img2.jpg', err => console.log(err));
-                            fs.unlinkSync('/tmp/img1r.jpg', err => console.log(err));
-                            fs.unlinkSync('/tmp/brazzers.jpg', err => console.log(err));
-
                           })
                           .catch( err => console.log(err));
                     })
