@@ -1,7 +1,5 @@
 var filter = require('./channel_filter.js')
 var imgur = require('imgur');
-var watermark = require('watermarkjs');
-
 var imgur_ep = 'https://api.imgur.com/3/'
 
 var jsCommand = "brazzers";
@@ -18,21 +16,20 @@ function help_info() {
 function execute(command, args, message) {
   if(command === jsCommand && filter(message)) {
     
-    imgur.setAPIUrl('https://api.imgur.com/3/');
+    imgur.setAPIUrl(imgur_ep);
     
-    watermark(['https://i.imgur.com/s5AUpuY.jpg', 'https://i.imgur.com/gSnHoXE.jpg'])
-      .image( (image1, image2) => {
-        var context = image1.getContext('2d');
-        context.save();
+    gm('https://i.imgur.com/s5AUpuY.jpg')
+      .draw(['image Over 0,0 0,0 https://i.imgur.com/gSnHoXE.jpg'])
+      .write(
+      
+    imgur.uploadFile(target, process.env.IMGUR_ALBUM)
+      .then(function (json) {
+        console.log(json.data.link);
+      })
+      .catch(function (err) {
+        console.error(err.message);
+      });
 
-        context.drawImage(image2, 10, 10);
-        
-        context.restore();
-        return image1;
-    })
-      .then( target => {
-        
-    });
     
     // request({
     //         url: cat,

@@ -13,6 +13,7 @@ commandList.push(require('./victory_royale.js'));
 commandList.push(require('./clip.js'));
 commandList.push(require('./poll.js'));
 commandList.push(require('./evan.js'));
+commandList.push(require('./brazzers.js'));
 const help = require('./help.js');
 commandList.push(help);
 
