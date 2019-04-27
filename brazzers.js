@@ -1,7 +1,7 @@
 var filter = require('./channel_filter.js')
 var imgur = require('imgur');
+var image
 var imgur_ep = 'https://api.imgur.com/3/';
-var gd = require('easy-gd');
 
 var jsCommand = "brazzers";
 
@@ -16,19 +16,25 @@ function help_info() {
 
 function execute(command, args, message) {
   if(command === jsCommand && filter(message)) {
-    var tmpFilename;
-    if(args[0] === "") {
+    var tmpFilename = args[0];
+    if(tmpFilename === "") {
       var seconds = new Date() / 1000;
       tmpFilename = String(seconds);
     }
     
     imgur.setAPIUrl(imgur_ep);
     
-    gm('https://i.imgur.com/s5AUpuY.jpg')
-      .draw(['image Over 0,0 0,0 https://i.imgur.com/gSnHoXE.jpg'])
-      .write(`/tmp/${args[0]}.jpg`, e => console.log(e));
+    let mc = new MC({
       
-    imgur.uploadFile(`/tmp/${args[0]}`, process.env.IMGUR_ALBUM)
+    });
+    
+    // var image = gd.open('https://i.imgur.com/s5AUpuY.jpg');
+    
+    // var watermarked = image.watermark('https://i.imgur.com/gSnHoXE.jpg', {x: 1, y: 1});
+    
+    // watermarked.save(`/tmp/${tmpFilename}.jpg`);
+      
+    imgur.uploadFile(`/tmp/${tmpFilename}`, process.env.IMGUR_ALBUM)
       .then(function (json) {
         console.log(json.data.link);
       })
