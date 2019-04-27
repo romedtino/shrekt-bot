@@ -18,16 +18,20 @@ function help_info() {
 function execute(command, args, message) {
   if(command === jsCommand && filter(message)) {
     
-    watermark(['https://i.imgur.com/s5AUpuY.jpg', 'http://i.imgur.com/Ebb75ej.jpg'])
+    imgur.setAPIUrl('https://api.imgur.com/3/');
+    
+    watermark(['https://i.imgur.com/s5AUpuY.jpg', 'https://i.imgur.com/gSnHoXE.jpg'])
       .image( (image1, image2) => {
         var context = image1.getContext('2d');
         context.save();
-        
-        context.globalAlpha = alpha;
+
         context.drawImage(image2, 10, 10);
         
         context.restore();
-        return target;
+        return image1;
+    })
+      .then( target => {
+        
     });
     
     // request({
