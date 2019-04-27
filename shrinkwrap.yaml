@@ -2,6 +2,7 @@ dependencies:
   canvas: 2.4.1
   discord.js: 11.4.2
   express: 4.16.4
+  fs: 0.0.1-security
   imgur: 0.3.1
   merge-images: 1.1.0
   nedb: 1.8.0
@@ -415,6 +416,10 @@ packages:
     dev: false
     resolution:
       integrity: sha1-FQStJSMVjKpA20onh8sBQRmU6k8=
+  /fs/0.0.1-security:
+    dev: false
+    resolution:
+      integrity: sha1-invTcYa23d84E/I4WLV+yq9eQdQ=
   /gauge/2.7.4:
     dependencies:
       aproba: 1.2.0
@@ -1232,6 +1237,7 @@ specifiers:
   canvas: ^2.4.1
   discord.js: ^11.4.2
   express: ^4.16.4
+  fs: ^0.0.1-security
   imgur: ^0.3.1
   merge-images: ^1.1.0
   nedb: ^1.8.0

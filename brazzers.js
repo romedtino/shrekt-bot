@@ -23,25 +23,34 @@ function execute(command, args, message) {
       tmpFilename = String(seconds);
     }
     
-    imgur.setAPIUrl('https://api.imgur.com/3');
-    imgur.setClientId(process.env.IMGUR_CLIENTID);
+//     imgur.setAPIUrl('https://api.imgur.com/3');
+//     imgur.setClientId(process.env.IMGUR_CLIENTID);
     
-    request(`https://api.imgur.com/oauth2/authorize?client_id=${process.env.IMGUR_CLIENTID}&response_type=token`, (err, res, body) => {
-      console.log(body);
-//       mergeImages(['https://i.imgur.com/s5AUpuY.jpg', 'https://i.imgur.com/gSnHoXE.jpg'], {
-//         Canvas: Canvas
-//       })
-//         .then( b64 => {
-
-//           imgur.uploadBase64(b64)
-//               .then(function (json) {
-//                 console.log(json.data.link);
-//               })
-//               .catch(function (err) {
-//                 console.error(err.message);
-//               });
-//       });
-    });
+    // request(`https://api.imgur.com/oauth2/authorize?client_id=${process.env.IMGUR_CLIENTID}&response_type=token`, (err, res, body) => {
+      // console.log(body);
+      mergeImages(['https://i.imgur.com/s5AUpuY.jpg', 'https://i.imgur.com/gSnHoXE.jpg'], {
+        Canvas: Canvas
+      })
+        .then( b64 => {
+          fs.writeFile("/tmp/brazzers.png", b64, 'base64', err => {
+            if(err) {
+              console.log(err)
+            } else {
+              message.channel.send(`<@${message.author.id}>`, {
+                files: ['/tmp/brazzers.png']
+              });
+            }
+          });
+          
+          // imgur.uploadBase64(b64)
+          //     .then(function (json) {
+          //       console.log(json.data.link);
+          //     })
+          //     .catch(function (err) {
+          //       console.error(err.message);
+          //     });
+      });
+    // });
     
     
     
