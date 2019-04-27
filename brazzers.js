@@ -23,13 +23,28 @@ function execute(command, args, message) {
       var seconds = new Date() / 1000;
       tmpFilename = String(seconds);
     }
-  
+      request.defaults({ encoding: null });
+      
+      request.get('https://i.imgur.com/s5AUpuY.jpg', (err, res, body) => {
+        request.get('https://i.imgur.com/gSnHoXE.jpg', (err2, res2, body2) => {
+          sharp(body)
+            .composite([{input: 'https://i.imgur.com/gSnHoXE.jpg', gravity: sharp.gravity.southeast }])
+            .toFile('/tmp/brazzers.png')
+            .then( data => {
+              message.channel.send(`<@${message.author.id}> here ya go`, {
+                  files: ['/tmp/brazzers.png']
+                });
+            })
+            .catch( err => console.log(err));
+        });
+      });
+    
       sharp('https://i.imgur.com/s5AUpuY.jpg')
-        .overlayWith('https://i.imgur.com/gSnHoXE.jpg', { gravity: sharp.gravity.southeast } )
+        .composite([{input: 'https://i.imgur.com/gSnHoXE.jpg', gravity: sharp.gravity.southeast }])
         .toFile('/tmp/brazzers.png')
         .then( data => {
-          message.channel.send(`<@${message.author.id}>`, {
-              files: ['https://i.imgur.com/s5AUpuY.jpg']
+          message.channel.send(`<@${message.author.id}> here ya go`, {
+              files: ['/tmp/brazzers.png']
             });
         })
         .catch( err => console.log(err));
