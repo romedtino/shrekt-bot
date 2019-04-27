@@ -23,31 +23,34 @@ function execute(command, args, message) {
       var seconds = new Date() / 1000;
       tmpFilename = String(seconds);
     }
-      request.defaults({ encoding: null });
       
-      request.get('https://i.imgur.com/s5AUpuY.jpg', (err, res, body) => {
-        request.get('https://i.imgur.com/gSnHoXE.jpg', (err2, res2, body2) => {
-          sharp(body)
-            .composite([{input: 'https://i.imgur.com/gSnHoXE.jpg', gravity: sharp.gravity.southeast }])
-            .toFile('/tmp/brazzers.png')
-            .then( data => {
-              message.channel.send(`<@${message.author.id}> here ya go`, {
-                  files: ['/tmp/brazzers.png']
-                });
-            })
-            .catch( err => console.log(err));
+      request('https://i.imgur.com/s5AUpuY.jpg', { encoding: 'binary'}, (err, res, body) => {
+        fs.writeFile('downloaded.jpg', body, 'binary', err => {
+            request('https://i.imgur.com/gSnHoXE.jpg', { encoding: 'binary'}, (err2, res2, body2) => {
+              fs.writeFile('downloaded.jpg', body, 'binary', err => {
+            sharp(body)
+              .composite([{input: body2, gravity: sharp.gravity.southeast }])
+              .toFile('/tmp/brazzers.png')
+              .then( data => {
+                message.channel.send(`<@${message.author.id}> here ya go`, {
+                    files: ['/tmp/brazzers.png']
+                  });
+              })
+              .catch( err => console.log(err));
+          });
         });
+
       });
     
-      sharp('https://i.imgur.com/s5AUpuY.jpg')
-        .composite([{input: 'https://i.imgur.com/gSnHoXE.jpg', gravity: sharp.gravity.southeast }])
-        .toFile('/tmp/brazzers.png')
-        .then( data => {
-          message.channel.send(`<@${message.author.id}> here ya go`, {
-              files: ['/tmp/brazzers.png']
-            });
-        })
-        .catch( err => console.log(err));
+      // sharp('https://i.imgur.com/s5AUpuY.jpg')
+      //   .composite([{input: 'https://i.imgur.com/gSnHoXE.jpg', gravity: sharp.gravity.southeast }])
+      //   .toFile('/tmp/brazzers.png')
+      //   .then( data => {
+      //     message.channel.send(`<@${message.author.id}> here ya go`, {
+      //         files: ['/tmp/brazzers.png']
+      //       });
+      //   })
+      //   .catch( err => console.log(err));
     
       // mergeImages(['https://i.imgur.com/s5AUpuY.jpg', 'https://i.imgur.com/gSnHoXE.jpg'], {
       //   Canvas: Canvas
