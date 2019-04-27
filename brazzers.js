@@ -1,6 +1,5 @@
 var filter = require('./channel_filter.js')
-var request = require ("request");
-var cat = "http://aws.random.cat/meow.php"
+var imgur = require('imgur');
 
 var jsCommand = "brazzers";
 
@@ -29,7 +28,7 @@ function execute(command, args, message) {
                 .then(() => console.log("message deleted."))
                 .catch(console.error);
             }
-            });
+    });
   }
 
 }
