@@ -3,7 +3,6 @@ var imgur = require('imgur');
 var fs = require('fs');
 var mergeImages = require('merge-images');
 const Canvas = require('canvas');
-var imgur_ep = 'https://api.imgur.com/3/';
 var jsCommand = "brazzers";
 
 function help_info() {
@@ -23,7 +22,8 @@ function execute(command, args, message) {
       tmpFilename = String(seconds);
     }
     
-    imgur.setAPIUrl(imgur_ep);
+    imgur.setAPIUrl(`https://api.imgur.com/oauth2/authorize?client_id=${process.env.IMGUR_CLIENTID}&response_type=token`);
+    imgur.setClientId(process.env.IMGUR_CLIENTID);
     
     let width, height;
     let backgroundColor = '0x000000'
@@ -32,8 +32,8 @@ function execute(command, args, message) {
       Canvas: Canvas
     })
       .then( b64 => {
+      
         imgur.uploadBase64(b64)
-         imgur.uploadFile(`/tmp/${tmpFilename}`, process.env.IMGUR_ALBUM)
             .then(function (json) {
               console.log(json.data.link);
             })
