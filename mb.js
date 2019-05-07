@@ -189,3 +189,4 @@ function execute(command, args, message) {
 
 module.exports.execute = execute;
 module.exports.help_info = help_info;
+module.exports.command = jsCommand;
