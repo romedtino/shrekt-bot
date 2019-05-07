@@ -1,5 +1,6 @@
 // Load up the discord.js library
 const Discord = require("discord.js");
+const congo = require('./bot-conglomorate.js');
 
 const commandList = [];
 
@@ -66,6 +67,9 @@ client.on("message", async message => {
  for(var i=0;i<commandList.length;i++) {
    commandList[i].execute(command, args, message);
  }
+  if(command === "testme") {
+    congo.execute("bark", {}, message);
+  }
 });
 
 client.login(config.token);

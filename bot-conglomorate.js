@@ -2,10 +2,15 @@ var request = require ("request");
 
 var url="https://bot-conglomorate.glitch.me/";
 
-function execute(command, args, message) {
-  request({
-            url: url,
-            json: true
+function execute(command, morePayload, message) {
+  
+  var payload = { client: message.author.id };
+  
+  var customUrl = url + command;
+  
+  request.post({
+            url: customUrl,
+            json: payload
         }, (error, response, body) => {
             message.channel.send(body);
             message.delete()
@@ -13,3 +18,5 @@ function execute(command, args, message) {
               .catch(console.error);
   });
 }
+
+module.exports.execute = execute;
