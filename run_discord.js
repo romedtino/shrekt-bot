@@ -3,7 +3,7 @@ const Discord = require("discord.js");
 const congo = require('./bot-conglomorate.js');
 
 const commandList = [];
-const commandList2 = require('./commands.json');//["bark", "clip", "evan", "fart", "mb", "meeseeks", "meow", "slap", "royale"];
+const commandList2 = require('./commands.js').commands;//["bark", "clip", "evan", "fart", "mb", "meeseeks", "meow", "slap", "royale"];
 
 //commandList.push(require('./meeseeks.js'));
 //commandList.push(require('./slap.js'));

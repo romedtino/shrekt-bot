@@ -1,4 +1,4 @@
-{ "commands" : [{
+module.exports = { "commands" : [{
     "command" : "bark",
     "args" : ""
     },
