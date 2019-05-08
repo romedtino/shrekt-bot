@@ -3,7 +3,7 @@ const Discord = require("discord.js");
 const congo = require('./bot-conglomorate.js');
 
 const commandList = [];
-const commandList2 = require('./commands.js').commands;//["bark", "clip", "evan", "fart", "mb", "meeseeks", "meow", "slap", "royale"];
+const commandList2 = require('./commands.js').commands;
 
 commandList.push(require('./poll.js'));
 commandList.push(require('./brazzers.js'));
@@ -69,13 +69,6 @@ client.on("message", async message => {
       break;
     }
   }
-  
-  // commandList2.forEach( x => {
-  //   if(x.command === command) {
-  //     congo.execute(command, x.args + args.toString(), message);
-  //   }
-  // });
-
   
 });
 
