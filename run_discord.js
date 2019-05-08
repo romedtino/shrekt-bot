@@ -3,7 +3,7 @@ const Discord = require("discord.js");
 const congo = require('./bot-conglomorate.js');
 
 const commandList = [];
-const commandList2 = ["bark", "clip", "evan", "fart", "mb", "meeseeks", "meow", "slap", "royale"];
+const commandList2 = require('./commands.json');//["bark", "clip", "evan", "fart", "mb", "meeseeks", "meow", "slap", "royale"];
 
 //commandList.push(require('./meeseeks.js'));
 //commandList.push(require('./slap.js'));
@@ -42,7 +42,7 @@ client.on("ready", () => {
   }
   
   for(var i=0;i<commandList2.length;i++) {
-    congo.help(commandList2[i])
+    congo.help(commandList2[i].command)
       .then( res => help.add_command(res));
   }
   
@@ -72,9 +72,12 @@ client.on("message", async message => {
    commandList[i].execute(command, args, message);
   }
   
-  if(commandList2.includes(command)) {
-    congo.execute(command, args.toString(), message);
-  }
+  commandList2.forEach( x => {
+    if(x.command === command) {
+      congo.execute(command, x.args + args.toString(), message);
+    }
+  });
+
   
 });
 
