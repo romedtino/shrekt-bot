@@ -72,11 +72,10 @@ client.on("message", async message => {
    commandList[i].execute(command, args, message);
   }
   
-  if(commandList2.includes(command)
-  
-  if(command === "testme") {
-    congo.execute("slap", args.toString(), message);
+  if(commandList2.includes(command)) {
+    congo.execute(command, args.toString(), message);
   }
+  
 });
 
 client.login(config.token);
