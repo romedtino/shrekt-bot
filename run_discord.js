@@ -66,7 +66,7 @@ client.on("message", async message => {
    commandList[i].execute(command, args, message);
  }
   if(command === "testme") {
-    congo.execute("bark", {}, message);
+    congo.execute("bark", args.toString(), message);
   }
 });
 
