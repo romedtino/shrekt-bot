@@ -2,9 +2,9 @@ var request = require ("request");
 
 var url="https://bot-conglomorate.glitch.me/";
 
-function execute(command, morePayload, message) {
-  
-  var payload = { client: message.author.id };
+function execute(command, payload, message) {
+    
+  payload["arg0"] = message.author.id;
   
   var customUrl = url + command;
   
