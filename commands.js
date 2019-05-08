@@ -15,10 +15,6 @@ module.exports = { "commands" : [{
       "args" : ""
     },
     {
-      "command" : "mb",
-      "args" : ""
-    },
-    {
       "command" : "meeseeks",
       "args" : ""
     },
@@ -29,10 +25,6 @@ module.exports = { "commands" : [{
     {
       "command" : "slap",
       "args" : ""
-    },
-    {
-      "command" : "royale",
-      "args" : process.env.ROYALE_WINNERS
     },
   ]
 }

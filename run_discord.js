@@ -25,7 +25,7 @@ client.on("ready", () => {
   console.log(`Bot has started, with ${client.users.size} users, in ${client.channels.size} channels of ${client.guilds.size} guilds.`); 
   // Example of changing the bot's playing game to something useful. `client.user` is what the
   // docs refer to as the "ClientUser".
-  client.user.setActivity(`${client.guilds.size} servers for fools`);
+  client.user.setActivity(`${client.guilds.size} swamps managed`);
 
   //Add commands 
   for(var i=0;i<commandList.length;i++) {

@@ -1,11 +1,12 @@
 var request = require ("request");
+const config = require('./config.js');
 
 var url="https://bot-conglomorate.glitch.me/";
 
 function execute(command, args, message) {
     
   var payload = { "client" : message.author.id,
-                 "key" : process.env.FAMIREE_KEY,
+                 "key" : process.env.SHREKT_KEY,
                 "args" : args };
   
   var customUrl = url + command;
@@ -23,7 +24,7 @@ function execute(command, args, message) {
 
 function help(command) {
   return new Promise( (resolve, reject) => {
-    var customUrl = url + command + "/help";
+    var customUrl = url + command + "/help" + "?prefix=" + config.prefix;
 
     request.get(customUrl, (error, res, body) => {
       resolve(JSON.parse(body));
