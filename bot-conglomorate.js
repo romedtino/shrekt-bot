@@ -4,8 +4,8 @@ var url="https://bot-conglomorate.glitch.me/";
 
 function execute(command, args, message) {
     
-  var payload = { "arg0" : message.author.id };
-  payload = ["arg0"] = message.author.id;
+  var payload = { "arg0" : message.author.id,
+                "arg1" : args };
   
   var customUrl = url + command;
   
@@ -25,7 +25,7 @@ function help(command) {
     var customUrl = url + command + "/help";
 
     request.get(customUrl, (error, res, body) => {
-      resolve(body);
+      resolve(JSON.parse(body));
     });
   });
 }
