@@ -2,7 +2,7 @@ var filter = require('./channel_filter.js')
 var imgur = require('imgur');
 var fs = require('fs');
 var mergeImages = require('merge-images');
-var sharp = require('sharp');
+// var sharp = require('sharp');
 const Canvas = require('canvas');
 var request = require('request');
 var jimp = require('jimp');
@@ -18,9 +18,12 @@ function help_info() {
 
 }
 
-async function brazzit(args) {
+async function brazzit(message, args) {
   var brazzersLogoURL = 'https://i.imgur.com/gSnHoXE.jpg';
   const brazzLogo = await jimp.read(brazzersLogoURL);
+  
+  
+  brazzLogo.scale(0.2);
   
   var tmpFilename = args[0];
   if(!tmpFilename) {
@@ -28,6 +31,17 @@ async function brazzit(args) {
   }
   
   const targetImg = await jimp.read(tmpFilename);
+  
+  targetImg.blit(brazzLogo, 0, 0);
+  
+  var seconds = new Date() / 1000;
+  const outfile = `/tmp/brazzers${seconds}.jpg`;
+  
+  targetImg.write(outfile);
+  
+  message.channel.send(`<@${message.author.id}> here ya go`, {
+                          files: [`outfile`]
+                        });
 }
 
 function execute(command, args, message) {
@@ -42,7 +56,7 @@ function execute(command, args, message) {
     
     var seconds = new Date() / 1000;
     
-
+    brazzit(message, args);
     
 //     request(tmpFilename, { encoding: 'binary'}, (err, res, body) => {
 //       fs.writeFile(`/tmp/img1${seconds}.${ext}`, body, 'binary', errWrite => {
