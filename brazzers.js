@@ -18,30 +18,38 @@ function help_info() {
 
 }
 
-async function brazzit(message, args) {
-  var brazzersLogoURL = 'https://i.imgur.com/gSnHoXE.jpg';
-  const brazzLogo = await jimp.read(brazzersLogoURL);
-  
-  
-  brazzLogo.scale(0.2);
-  
+function brazzit(message, args) {
   var tmpFilename = args[0];
   if(!tmpFilename) {
     tmpFilename = 'https://i.imgur.com/s5AUpuY.jpg';
   }
   
-  const targetImg = await jimp.read(tmpFilename);
-  
-  targetImg.blit(brazzLogo, 0, 0);
-  
   var seconds = new Date() / 1000;
   const outfile = `/tmp/brazzers${seconds}.jpg`;
   
-  targetImg.write(outfile);
-  
-  message.channel.send(`<@${message.author.id}> here ya go`, {
+  var brazzersLogoURL = 'https://i.imgur.com/gSnHoXE.jpg';
+  jimp.read(brazzersLogoURL)
+    .then( image => {
+      console.log("read brazz");
+      image.scale(0.2)
+      jimp.read(tmpFilename)
+        .then( targetImg => {
+          console.log("read tmp");
+          targetImg.blit(image, 0, 0);
+          console.log("writing");
+          targetImg.write(outfile, () => {
+                console.log("sending to chan");
+                message.channel.send(`<@${message.author.id}> here ya go`, {
                           files: [`outfile`]
                         });
+            });
+        })
+        .catch( e => console.log("JEROME" + e) );
+  
+    })
+    .catch( e => console.log("JEROME2" + e) );
+  
+
 }
 
 function execute(command, args, message) {
