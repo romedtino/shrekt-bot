@@ -1,9 +1,6 @@
 var filter = require('./channel_filter.js')
 var imgur = require('imgur');
 var fs = require('fs');
-var mergeImages = require('merge-images');
-const Canvas = require('canvas');
-var request = require('request');
 var jimp = require('jimp');
 
 var jsCommand = "brazzers";
