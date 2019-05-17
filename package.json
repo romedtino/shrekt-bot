@@ -13,8 +13,9 @@
     "express": "^4.16.4",
     "fs": "^0.0.1-security",
     "imgur": "^0.3.1",
+    "jimp": "^0.6.4",
     "nedb": "^1.8.0",
-    "request": "^2.88.0",
+    "request": "^2.88.0"
   },
   "engines": {
     "node": "9.x"

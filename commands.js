@@ -26,5 +26,10 @@ module.exports = { "commands" : [{
       "command" : "slap",
       "args" : ""
     },
+    {
+      "command" : "brazzers",
+      "args" : ""
+    },
+                                 
   ]
 }
