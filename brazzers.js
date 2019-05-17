@@ -31,16 +31,17 @@ function brazzit(message, args) {
   jimp.read(brazzersLogoURL)
     .then( image => {
       console.log("read brazz");
-      image.scale(0.2)
+      image.scale(0.08)
       jimp.read(tmpFilename)
         .then( targetImg => {
           console.log("read tmp");
-          targetImg.blit(image, 0, 0);
+          targetImg.blit(image, targetImg.bitmap.width - image.bitmap.width, 
+                         targetImg.bitmap.height - image.bitmap.width);
           console.log("writing");
           targetImg.write(outfile, () => {
                 console.log("sending to chan");
                 message.channel.send(`<@${message.author.id}> here ya go`, {
-                          files: [`outfile`]
+                          files: [`${outfile}`]
                         });
             });
         })
