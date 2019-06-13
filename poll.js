@@ -54,12 +54,9 @@ function execute(command, args, message) {
                message.react(pollInfo[i].trim());
             }            
           }
-      
-      })
-      .then(message => {
-        message.delete()
-          .then(() => console.log("message deleted."))
-          .catch(console.error);
+      //message.delete()
+      //  .then(() => console.log("message deleted."))
+       // .catch(console.error);
       })
       .catch(function() {
           message.channel.send("Something went wonky with creating your poll :(");
