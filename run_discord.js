@@ -31,12 +31,50 @@ client.on("ready", () => {
     help.add_command(commandList[i].help_info());
   }
   
-  for(var i=0;i<commandList2.length;i++) {
-    congo.help(commandList2[i].command, 500*(i+1))
-      .then( res => help.add_command(res));
-  }
+  var commandNames = [];
+  commandList2.forEach(ele => commandNames.push(ele.command));
+  loadCongos(commandNames);
   
 });
+
+function addCommand(command) {
+  return new Promise((good, bad) => {
+    congo
+      .help(command)
+      .then(res => {
+        console.log(`Added ${command}!`);
+        help.add_command(res);
+        good("yes");
+      })
+      .catch(err => {
+        console.log("Problem receiving help from bot-congo: " + err);
+        good(err);
+      });
+  });
+}
+
+function loadCongos(congoList) {
+  var promises = [];
+  for (var i = 0; i < congoList.length; i++) {
+    promises.push(addCommand(congoList[i]));
+  }
+
+  Promise.all(promises).then(results => {
+    console.log("All promises received, checking for failures to redo...");
+    var idx;
+    var redos = [];
+    for (idx = 0; idx < results.length; ++idx) {
+      if (results[idx] !== "yes") {
+        console.log(`Redoing ${results[idx]}...`);
+        redos.push(results[idx]);
+      }
+    }
+
+    if(redos.length != 0) {
+      loadCongos(redos);
+    }
+  });
+}
 
 client.on("message", async message => {
   // This event will run on every single message received, from any channel or DM.

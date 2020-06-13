@@ -25,15 +25,21 @@ function execute(command, args, message) {
   });
 }
 
-function help(command, delay) {
+function help(command) {
   return new Promise( (resolve, reject) => {
-     sleep(delay).then(() => {
       var customUrl = url + command + "/help" + "?prefix=" + config.prefix;
-
+      console.log("[CONGO] - Grabbing help: " + customUrl);
       request.post(customUrl, (error, res, body) => {
-        resolve(JSON.parse(body));
+        try {
+          var json_help = JSON.parse(body);
+          resolve(json_help);
+
+        } catch (err){
+          console.log(`${command} Received HTML not JSON. Probably waking up issue...`);
+          // console.log(body);
+          reject(command);
+        }
       });
-    });
   });
 }
 
