@@ -26,7 +26,7 @@ function help(command) {
   return new Promise( (resolve, reject) => {
     var customUrl = url + command + "/help" + "?prefix=" + config.prefix;
 
-    request.get(customUrl, (error, res, body) => {
+    request.post(customUrl, (error, res, body) => {
       resolve(JSON.parse(body));
     });
   });

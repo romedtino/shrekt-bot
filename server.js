@@ -10,4 +10,9 @@ setInterval(() => {
   http.get(`http://${process.env.PROJECT_DOMAIN}.glitch.me/`);
 }, 280000);
 
+try {
 const famiree = require('./run_discord.js');
+} catch(err) {
+  console.log("HALP JEROME!");
+  console.log(err)
+}
