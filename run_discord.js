@@ -32,7 +32,7 @@ client.on("ready", () => {
   }
   
   for(var i=0;i<commandList2.length;i++) {
-    congo.help(commandList2[i].command)
+    congo.help(commandList2[i].command, 500*(i+1))
       .then( res => help.add_command(res));
   }
   

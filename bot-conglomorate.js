@@ -1,6 +1,9 @@
 var request = require ("request");
 const config = require('./config.js');
 
+const { promisify } = require('util')
+const sleep = promisify(setTimeout)
+
 var url="https://bot-conglomorate.glitch.me/";
 
 function execute(command, args, message) {
@@ -22,12 +25,14 @@ function execute(command, args, message) {
   });
 }
 
-function help(command) {
+function help(command, delay) {
   return new Promise( (resolve, reject) => {
-    var customUrl = url + command + "/help" + "?prefix=" + config.prefix;
+     sleep(delay).then(() => {
+      var customUrl = url + command + "/help" + "?prefix=" + config.prefix;
 
-    request.post(customUrl, (error, res, body) => {
-      resolve(JSON.parse(body));
+      request.post(customUrl, (error, res, body) => {
+        resolve(JSON.parse(body));
+      });
     });
   });
 }
