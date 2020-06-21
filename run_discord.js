@@ -71,7 +71,7 @@ function loadCongos(congoList) {
     }
 
     if(redos.length != 0) {
-      loadCongos(redos);
+      setTimeout(()=> {loadCongos(redos)}, 60000);
     }
   });
 }
