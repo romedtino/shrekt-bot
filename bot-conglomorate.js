@@ -4,7 +4,7 @@ const config = require('./config.js');
 const { promisify } = require('util')
 const sleep = promisify(setTimeout)
 
-var url="https://bot-conglomorate.glitch.me/";
+var url=process.env.CONGO_URL;
 
 function execute(command, args, message) {
     
@@ -27,19 +27,14 @@ function execute(command, args, message) {
 
 function help(command) {
   return new Promise( (resolve, reject) => {
-      var customUrl = url + command + "/help" + "?prefix=" + config.prefix;
-      console.log("[CONGO] - Grabbing help: " + customUrl);
-      request.post(customUrl, (error, res, body) => {
-        try {
-          var json_help = JSON.parse(body);
-          resolve(json_help);
-
-        } catch (err){
-          console.log(`${command} Received HTML not JSON. Probably waking up issue...`);
-          // console.log(body);
-          reject(command);
-        }
-      });
+    var customUrl = url + command + "/help" + "?prefix=" + config.prefix;
+    console.log("[CONGO] - Grabbing help: " + customUrl);
+    request.get(customUrl, (error, res, body) => {
+      if(error) {
+        return reject(error);
+      }
+      resolve(JSON.parse(body));
+    });
   });
 }
 
