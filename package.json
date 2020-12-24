@@ -2,20 +2,21 @@
   "//1": "describes your app and its dependencies",
   "//2": "https://docs.npmjs.com/files/package.json",
   "//3": "updating this file will download and update your packages",
-  "name": "famiree-discord",
+  "name": "shrekt",
   "version": "0.0.1",
-  "description": "Discord famirreeee",
+  "description": "Discord shrekt",
   "scripts": {
     "start": "node server.js"
   },
   "dependencies": {
-    "discord.js": "^11.4.2",
-    "express": "^4.16.4",
+    "discord.js": "^12.5.1",
+    "express": "^4.17.1",
     "fs": "^0.0.1-security",
     "imgur": "^0.3.1",
-    "jimp": "^0.6.4",
+    "jimp": "^0.16.1",
     "nedb": "^1.8.0",
-    "request": "^2.88.0"
+    "request": "^2.88.2",
+    "save": "^2.4.0"
   },
   "engines": {
     "node": "9.x"
