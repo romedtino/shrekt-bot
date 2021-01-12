@@ -13,6 +13,5 @@ setInterval(() => {
 try {
 const famiree = require('./run_discord.js');
 } catch(err) {
-  console.log("HALP JEROME!");
   console.log(err)
 }

@@ -5,7 +5,7 @@ if (DEBUG)
 {
     TARGET_GUILD=process.env.TEST_GUILD_ID;
 } else {
-    TARGET_GUILD=process.env.FAMIREE_GUILD_ID;
+    TARGET_GUILD=process.env.SHREKT_GUILD_ID;
 }
 
 // Load up the discord.js library
