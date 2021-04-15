@@ -1,5 +1,5 @@
 var request = require ("request");
-
+const Discord = require("discord.js");
 var url=process.env.CONGO_URL;
 
 function execute(command, args, client, interaction) {
@@ -17,24 +17,35 @@ function execute(command, args, client, interaction) {
     
   var payload = { "client" : interaction.member.user.id,
                  "username" : interaction.member.user.username,
-                 "key" : process.env.SHREKT_KEY,
+                 "key" : process.env.FAMIREE_KEY,
                 "args" : args + extra_args.trim(),
                  "raw_opt": interaction.data.options };
   
   var customUrl = url + command;
+
+  client.api.interactions(interaction.id, interaction.token).callback.post({data: {
+    type: 5,
+    data: {
+      tts: false,
+      content: "Loading..."
+      }
+    }
+  });
+  
   
   request.post({
             url: customUrl,
             json: payload
         }, (error, response, body) => {
-            client.api.interactions(interaction.id, interaction.token).callback.post({data: {
-              type: 3,
-              data: {
-                tts: false,
-                content: body
-                }
-              }
+          //see if its json
+          if(body["text"] === undefined) {
+            new Discord.WebhookClient(client.user.id, interaction.token).send(body);
+          
+          } else {
+            new Discord.WebhookClient(client.user.id, interaction.token).send(body.text, {
+              files: [body.attachment],
             });
+          }           
   });
 }
 
