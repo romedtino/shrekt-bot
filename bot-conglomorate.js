@@ -17,7 +17,7 @@ function execute(command, args, client, interaction) {
     
   var payload = { "client" : interaction.member.user.id,
                  "username" : interaction.member.user.username,
-                 "key" : process.env.FAMIREE_KEY,
+                 "key" : process.env.SHREKT_KEY,
                 "args" : args + extra_args.trim(),
                  "raw_opt": interaction.data.options };
   
