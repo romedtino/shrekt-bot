@@ -40,5 +40,9 @@ module.exports = {
       command: "butterfly",
       args: ""
     },
+    {
+      command: "jiggle",
+      args: ""
+    },
   ]
 };
