@@ -39,7 +39,18 @@ async function execute(command, args, client, interaction) {
       body: JSON.stringify(payload),
     });
 
-    const body = await response.json();
+    // Check content type — congo may return plain text (e.g. Discord mentions)
+    const contentType = response.headers.get('content-type') || '';
+    let body;
+    if (contentType.includes('application/json')) {
+      body = await response.json();
+    } else {
+      // Plain text response (e.g. "<@15951143...>") — treat as raw content
+      const text = await response.text();
+      console.log("[CONGO] Non-JSON response:", text.slice(0, 200));
+      await interaction.editReply({ content: text || "Empty response from service." });
+      return;
+    }
 
     if (body.text === undefined) {
       // Webhook-style response (likely image/attachment)
