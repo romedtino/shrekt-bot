@@ -1,20 +1,20 @@
-var whitelist = ["1337-speak",
-                 "cousins-trip",
-                 "secret-santa-2018",
-                 "sports",
-                 "general",
-                 "shrektonly"
-                ]
+const whitelist = [
+  "1337-speak",
+  "cousins-trip",
+  "secret-santa-2018",
+  "sports",
+  "general",
+  "shrektonly"
+];
 
-module.exports = function (message) {
-
+module.exports = function filter(message) {
   console.log("Checking channel: " + message.channel.name + " for whitelist.");
-  var i;
-  for (i=0;i< whitelist.length;++i) {
-    if(message.channel.name.indexOf(whitelist[i]) > -1){
+
+  for (const name of whitelist) {
+    if (message.channel.name.includes(name)) {
       return true;
     }
   }
 
-   return false;
-}
+  return false;
+};

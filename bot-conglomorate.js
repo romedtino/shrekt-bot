@@ -1,88 +1,108 @@
-var request = require ("request");
 const Discord = require("discord.js");
-const { MessageEmbed } = require('discord.js');
 
-var url=process.env.CONGO_URL;
+const url = process.env.CONGO_URL;
 
-function execute(command, args, client, interaction) {
+/**
+ * Execute a conglomorate command via the external bot-congo service.
+ * Uses Discord.js v14 interaction.reply() / interaction.editReply() patterns.
+ */
+async function execute(command, args, client, interaction) {
+  if (!interaction || !interaction.deferred) {
+    await interaction.deferReply();
+  }
 
-  let extra_args = "";
-  if (interaction.data.options !== undefined)
-  {
+  let extraArgs = "";
+  if (interaction.data?.options) {
     console.log("DEBUG:" + JSON.stringify(interaction.data.options));
-    interaction.data.options.forEach(e => {
-      if(e.value !== undefined) {
-        extra_args += e.value + " ";
-      }        
+    interaction.data.options.forEach((e) => {
+      if (e.value !== undefined) {
+        extraArgs += e.value + " ";
+      }
     });
   }
-    
-  var payload = { "client" : interaction.member.user.id,
-                 "username" : interaction.member.user.username,
-                 "key" : process.env.SHREKT_KEY,
-                "args" : args + extra_args.trim(),
-                 "raw_opt": interaction.data.options };
-  
-  var customUrl = url + command;
 
-  console.log("Sending loading...");
-  client.api.interactions(interaction.id, interaction.token).callback.post({data: {
-    type: 5,
-    data: {
-      tts: false,
-      content: "is thinking..."
+  const payload = {
+    client: interaction.member?.user?.id ?? interaction.user.id,
+    username: interaction.member?.user?.username ?? interaction.user.username,
+    key: process.env.SHREKT_KEY,
+    args: args + extraArgs.trim(),
+    raw_opt: interaction.data?.options ?? null,
+  };
+
+  const customUrl = url + command;
+
+  try {
+    console.log("Requesting from bot congo...");
+    const response = await fetch(customUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+
+    const body = await response.json();
+
+    if (body.text === undefined) {
+      // Webhook-style response (likely image/attachment)
+      await interaction.editReply({
+        content: null,
+        files: [body.attachment],
+      });
+    } else {
+      if (command === "chat") {
+        console.log("WOW WEE");
+        const embed = new Discord.EmbedBuilder()
+          .setDescription(body.attachment);
+        await interaction.editReply({
+          content: body.text,
+          embeds: [embed],
+        });
+      } else {
+        console.log("Hm not quit");
+        await interaction.editReply({
+          content: body.text,
+          files: [body.attachment],
+        });
       }
     }
-  })
-  .then( () =>{
-    console.log("Requesting from bot congo...");
-    request.post({
-              url: customUrl,
-              json: payload
-          }, (error, response, body) => {
-            //see if its json
-            if(body["text"] === undefined) {
-              new Discord.WebhookClient(client.user.id, interaction.token).send(body);
-            
-            } else {
-              if(command == "chat") {
-                console.log("WOW WEE")
-                const embed = new MessageEmbed()
-                  .setDescription(body.attachment);
-                // interaction.editReply({content: body.text, embeds: [embed]});
-                new Discord.WebhookClient(client.user.id, interaction.token).send(body.text, {
-                  embeds: [embed],
-                });
-              } else {
-                console.log("Hm not quit")
-                new Discord.WebhookClient(client.user.id, interaction.token).send(body.text, {
-                  files: [body.attachment],
-                });
-              }
-            }           
+  } catch (error) {
+    console.error("Error calling congo service:", error);
+    await interaction.editReply({
+      content: "Something went wrong while processing your command. :(",
+    }).catch(() => {
+      // Interaction may have expired; try webhook fallback
+      try {
+        new Discord.WebhookClient({
+          url: `https://discord.com/api/webhooks/${client.user.id}/${interaction.token}`,
+        }).send("Something went wrong while processing your command. :(");
+      } catch (webhookErr) {
+        console.error("Webhook fallback also failed:", webhookErr);
+      }
     });
-  })
-  .catch(console.error);
-  
-
+  }
 }
 
+/**
+ * Fetch slash command definition from the congo service.
+ */
 function get_slash(command) {
-  return new Promise( (resolve, reject) => {
-    var customUrl = url + command + "/get_slash";
+  return new Promise((resolve, reject) => {
+    const customUrl = url + command + "/get_slash";
     console.log("[CONGO] - Grabbing slash: " + customUrl);
-    request.post(customUrl, (error, res, body) => {
-      if(error) {
+
+    fetch(customUrl, { method: 'POST' })
+      .then((res) => res.text())
+      .then((body) => {
+        try {
+          resolve(JSON.parse(body));
+        } catch (err) {
+          console.log("Error on JSON parse " + err);
+          reject(command);
+        }
+      })
+      .catch((error) => {
         console.log("Error on URL request " + error);
-        return reject(command);
-      }
-      try {
-        resolve(JSON.parse(body));
-      }catch(err) {
-        console.log("Error on JSON parse " + err);
         reject(command);
-      }
-    });
+      });
   });
 }
 

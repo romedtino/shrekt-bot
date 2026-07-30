@@ -1,96 +1,101 @@
-let DEBUG=false
+const { Client, GatewayIntentBits, Partials } = require("discord.js");
 
-var TARGET_GUILD=[];
-if (DEBUG)
-{
-    TARGET_GUILD=[process.env.TEST_GUILD_ID];
-} else {
-    TARGET_GUILD=[process.env.SHREKT_GUILD_ID, process.env.JPL_GUILD_ID];
-}
-
-// Load up the discord.js library
-const Discord = require("discord.js");
 const congo = require('./bot-conglomorate.js');
 const commandList = require('./commands.js').commands;
 
-// This is your client. Some people call it `bot`, some people call it `self`, 
-// some might call it `cootchie`. Either way, when you see `client.something`, or `bot.something`,
-// this is what we're refering to. Your client.
-const client = new Discord.Client();
+const DEBUG = false;
+const TARGET_GUILD = DEBUG
+  ? [process.env.TEST_GUILD_ID]
+  : [process.env.SHREKT_GUILD_ID, process.env.JPL_GUILD_ID];
 
-// Here we load the config.json file that contains our token
+const client = new Client({
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.GuildMessageReactions,
+    GatewayIntentBits.MessageContent,
+  ],
+  partials: [Partials.Channel],
+});
+
 const config = require("./config.js");
-// config.token contains the bot's token
 
-client.on("ready", () => {
-    // This event will run if the bot starts, and logs in, successfully.
-    console.log(`Bot has started, with ${client.users.cache.size} users, in ${client.channels.cache.size} channels of ${client.guilds.cache.size} guilds.`);
-    // Example of changing the bot's playing game to something useful. `client.user` is what the
-    // docs refer to as the "ClientUser".
-    client.user.setActivity(`${client.guilds.cache.size} swamps managed`);
+client.once("ready", (c) => {
+  console.log(`Bot has started, with ${c.users.cache.size} users, in ${c.channels.cache.size} channels of ${c.guilds.cache.size} guilds.`);
+  c.user.setActivity(`${c.guilds.cache.size} swamps managed`);
 
-    var commandNames = [];
-    commandList.forEach(ele => commandNames.push(ele.command));
+  const commandNames = commandList.map((ele) => ele.command);
+  load_slash_congos(commandNames);
 
-    load_slash_congos(commandNames);
+  client.on("interactionCreate", async (interaction) => {
+    if (!interaction.isChatInputCommand()) return;
 
-    client.ws.on('INTERACTION_CREATE', async interaction => {
-        // do stuff and respond here
-        for (let cmd of commandList) {
-            if (cmd.command === interaction.data.name) {
-                congo.execute(cmd.command, cmd.args, client, interaction);
-                break;
-            }
-        }
-    });
-
+    for (const cmd of commandList) {
+      if (cmd.command === interaction.commandName) {
+        await congo.execute(cmd.command, cmd.args, client, interaction);
+        break;
+      }
+    }
+  });
 });
 
 function add_slash_command(command, guild) {
-    return new Promise((good, bad) => {
-        congo
-            .get_slash(command)
-            .then(res => {
-                console.log(`Added ${command}!`);
-                client.api.applications(client.user.id).guilds(guild).commands.post({ data: res });
-                good("yes");
-            })
-            .catch(err => {
-                console.log("Problem receiving help from bot-congo: " + err);
-                good(err);
-            });
-    });
+  return new Promise((resolve, reject) => {
+    congo
+      .get_slash(command)
+      .then((res) => {
+        console.log(`Added ${command}!`);
+        client.api.applications(client.user.id).guilds(guild).commands.post({ data: res })
+          .then(() => resolve("yes"))
+          .catch((err) => {
+            console.error(`Failed to register ${command}:`, err);
+            reject(command);
+          });
+      })
+      .catch((err) => {
+        console.log("Problem receiving help from bot-congo: " + err);
+        reject(command);
+      });
+  });
 }
 
 function load_slash_congos(congoList) {
-    var promises = [];
+  const promises = [];
 
-    for (let j=0;j<TARGET_GUILD.length;j++) {
-        for (var i = 0; i < congoList.length; i++) {
-            promises.push(add_slash_command(congoList[i], TARGET_GUILD[j]));
-        }
+  for (const guildId of TARGET_GUILD) {
+    for (const cmd of congoList) {
+      promises.push(add_slash_command(cmd, guildId));
     }
+  }
 
-    Promise.all(promises).then(results => {
-        console.log("All promises received, checking for failures to redo...");
-        var idx;
-        var redos = [];
-        for (idx = 0; idx < results.length; ++idx) {
-            if (results[idx] !== "yes") {
-                console.log(`Redoing ${results[idx]}...`);
-                redos.push(results[idx]);
-            }
-        }
-
-        if (redos.length != 0) {
-            setTimeout(() => { load_slash_congos(redos) }, 60000);
-        } else {
-            console.log("No redos. Nice.")
-        }
+  Promise.allSettled(promises).then((results) => {
+    console.log("All promises received, checking for failures to redo...");
+    const redos = [];
+    results.forEach((result, idx) => {
+      if (result.status === 'fulfilled' && result.value !== "yes") {
+        console.log(`Redoing ${result.value}...`);
+        redos.push(result.value);
+      } else if (result.status === 'rejected') {
+        // Already handled in add_slash_command
+      }
     });
+
+    // Fallback: re-check with results that failed
+    const failedNames = results
+      .filter(r => r.status === 'fulfilled' && r.value !== "yes")
+      .map(r => r.value);
+
+    if (failedNames.length !== 0) {
+      setTimeout(() => { load_slash_congos(failedNames) }, 60000);
+    } else {
+      console.log("No redos. Nice.");
+    }
+  });
 }
 
 client.login(config.token)
-    .catch(console.error);
+  .catch(console.error);
 
-client.on('error', (error) => console.log(error));
+client.on("error", (error) => console.error("Discord client error:", error));
+
+module.exports = client;
