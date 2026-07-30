@@ -21,6 +21,10 @@ module.exports = {
       args: ""
     },
     {
+      command: "favsays",
+      args: ""
+    },
+    {
       command: "meow",
       args: ""
     },
@@ -42,6 +46,10 @@ module.exports = {
     },
     {
       command: "jiggle",
+      args: ""
+    },
+    {
+      command: "chat",
       args: ""
     },
   ]

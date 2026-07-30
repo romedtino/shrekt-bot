@@ -1,11 +1,11 @@
 let DEBUG=false
 
-var TARGET_GUILD="";
+var TARGET_GUILD=[];
 if (DEBUG)
 {
-    TARGET_GUILD=process.env.TEST_GUILD_ID;
+    TARGET_GUILD=[process.env.TEST_GUILD_ID];
 } else {
-    TARGET_GUILD=process.env.SHREKT_GUILD_ID;
+    TARGET_GUILD=[process.env.SHREKT_GUILD_ID, process.env.JPL_GUILD_ID];
 }
 
 // Load up the discord.js library
@@ -46,13 +46,13 @@ client.on("ready", () => {
 
 });
 
-function add_slash_command(command) {
+function add_slash_command(command, guild) {
     return new Promise((good, bad) => {
         congo
             .get_slash(command)
             .then(res => {
                 console.log(`Added ${command}!`);
-                client.api.applications(client.user.id).guilds(TARGET_GUILD).commands.post({ data: res });
+                client.api.applications(client.user.id).guilds(guild).commands.post({ data: res });
                 good("yes");
             })
             .catch(err => {
@@ -64,8 +64,11 @@ function add_slash_command(command) {
 
 function load_slash_congos(congoList) {
     var promises = [];
-    for (var i = 0; i < congoList.length; i++) {
-        promises.push(add_slash_command(congoList[i]));
+
+    for (let j=0;j<TARGET_GUILD.length;j++) {
+        for (var i = 0; i < congoList.length; i++) {
+            promises.push(add_slash_command(congoList[i], TARGET_GUILD[j]));
+        }
     }
 
     Promise.all(promises).then(results => {

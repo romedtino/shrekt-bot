@@ -1,5 +1,7 @@
 var request = require ("request");
 const Discord = require("discord.js");
+const { MessageEmbed } = require('discord.js');
+
 var url=process.env.CONGO_URL;
 
 function execute(command, args, client, interaction) {
@@ -43,9 +45,20 @@ function execute(command, args, client, interaction) {
               new Discord.WebhookClient(client.user.id, interaction.token).send(body);
             
             } else {
-              new Discord.WebhookClient(client.user.id, interaction.token).send(body.text, {
-                files: [body.attachment],
-              });
+              if(command == "chat") {
+                console.log("WOW WEE")
+                const embed = new MessageEmbed()
+                  .setDescription(body.attachment);
+                // interaction.editReply({content: body.text, embeds: [embed]});
+                new Discord.WebhookClient(client.user.id, interaction.token).send(body.text, {
+                  embeds: [embed],
+                });
+              } else {
+                console.log("Hm not quit")
+                new Discord.WebhookClient(client.user.id, interaction.token).send(body.text, {
+                  files: [body.attachment],
+                });
+              }
             }           
     });
   })
