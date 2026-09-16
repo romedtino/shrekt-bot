@@ -11,10 +11,14 @@ async function execute(command, args, client, interaction) {
     await interaction.deferReply();
   }
 
+  // discord.js v14: interaction.data doesn't exist on command interactions.
+  // Options live on interaction.options (CommandInteractionOptionResolver#data).
+  const rawOptions = (interaction.options?.data ?? []).map(toRawOption);
+
   let extraArgs = "";
-  if (interaction.data?.options) {
-    console.log("DEBUG:" + JSON.stringify(interaction.data.options));
-    interaction.data.options.forEach((e) => {
+  if (rawOptions.length) {
+    console.log("DEBUG:" + JSON.stringify(rawOptions));
+    rawOptions.forEach((e) => {
       if (e.value !== undefined) {
         extraArgs += e.value + " ";
       }
@@ -26,13 +30,13 @@ async function execute(command, args, client, interaction) {
     username: interaction.member?.user?.username ?? interaction.user.username,
     key: process.env.SHREKT_KEY,
     args: args + extraArgs.trim(),
-    raw_opt: interaction.data?.options ?? null,
+    raw_opt: rawOptions,
   };
 
   const customUrl = url + command;
 
   try {
-    console.log("Requesting from bot congo...");
+    console.log(`Requesting from bot congo...${JSON.stringify(payload)}`);
     const response = await fetch(customUrl, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -90,6 +94,17 @@ async function execute(command, args, client, interaction) {
       }
     });
   }
+}
+
+/**
+ * Reduce a discord.js option object to plain Discord API-shaped data,
+ * dropping resolved user/channel/role objects that don't serialize cleanly.
+ */
+function toRawOption(opt) {
+  const raw = { name: opt.name, type: opt.type };
+  if (opt.value !== undefined) raw.value = opt.value;
+  if (Array.isArray(opt.options)) raw.options = opt.options.map(toRawOption);
+  return raw;
 }
 
 /**
