@@ -41,22 +41,32 @@ client.once("ready", (c) => {
   });
 });
 
-function add_slash_command(client, command, guild) {
-  return new Promise((resolve, reject) => {
-    congo
-      .get_slash(command)
-      .then((res) => {
-        console.log(`Added ${command}!`);
-        rest.put(Routes.applicationGuildCommands(client.user.id, guild), { body: [res] })
-          .then(() => resolve("yes"))
-          .catch((err) => {
-            console.error(`Failed to register ${command}:`, err);
-            reject(command);
-          });
-      })
-      .catch((err) => {
-        console.log("Problem receiving help from bot-congo: " + err);
-        reject(command);
+function register_guild_commands(client, guild, congoList) {
+  return Promise.allSettled(congoList.map((name) => congo.get_slash(name))).then((results) => {
+    const defs = [];
+    const failed = [];
+
+    results.forEach((result, i) => {
+      if (result.status === "fulfilled") {
+        console.log(`Added ${congoList[i]}!`);
+        defs.push(result.value);
+      } else {
+        console.log(`Problem receiving help from bot-congo for ${congoList[i]}: ` + result.reason);
+        failed.push(congoList[i]);
+      }
+    });
+
+    if (defs.length === 0) {
+      throw new Error(`No slash definitions available for guild ${guild}`);
+    }
+
+    // PUT /guilds/{id}/commands is a BULK OVERWRITE: the body must contain
+    // every command the guild should keep, or Discord deletes the rest.
+    return rest
+      .put(Routes.applicationGuildCommands(client.user.id, guild), { body: defs })
+      .then(() => {
+        console.log(`Registered ${defs.length}/${congoList.length} commands in guild ${guild}.`);
+        return failed;
       });
   });
 }
@@ -65,29 +75,19 @@ function load_slash_congos(client, congoList) {
   const promises = [];
 
   for (const guildId of TARGET_GUILD) {
-    for (const cmd of congoList) {
-      promises.push(add_slash_command(client, cmd, guildId));
-    }
+    promises.push(register_guild_commands(client, guildId, congoList));
   }
 
   Promise.allSettled(promises).then((results) => {
     console.log("All promises received, checking for failures to redo...");
-    const failedNames = results
-      .filter(r => {
-        if (r.status === 'fulfilled' && r.value !== "yes") {
-          console.log(`Redoing ${r.value}...`);
-          return true;
-        }
-        if (r.status === 'rejected') {
-          console.log(`Redoing rejected registration (${r.reason})...`);
-          return true;
-        }
-        return false;
-      })
-      .map(r => r.status === 'fulfilled' ? r.value : r.reason);
+    const needsRedo = results.some(
+      (r) => r.status === "rejected" || (Array.isArray(r.value) && r.value.length > 0)
+    );
 
-    if (failedNames.length !== 0) {
-      setTimeout(() => { load_slash_congos(client, failedNames) }, 60000);
+    if (needsRedo) {
+      // Redo with the FULL list: the PUT is a bulk overwrite, so a partial
+      // body would drop commands from the guild.
+      setTimeout(() => { load_slash_congos(client, congoList) }, 60000);
     } else {
       console.log("No redos. Nice.");
     }
